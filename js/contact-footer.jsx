@@ -1,0 +1,166 @@
+/* ============================================================
+   Contacto + Footer
+   ============================================================ */
+
+function ContactSection({ lang }) {
+  const t = window.I18N[lang].contact;
+  const f = t.form;
+  const ref = useReveal();
+  const [fields, setFields] = React.useState({ name: '', email: '', type: '', budget: '', message: '' });
+  const [errors, setErrors] = React.useState({});
+  const [sent, setSent] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
+
+  const set = (k) => (e) => setFields({ ...fields, [k]: e.target.value });
+
+  function validate() {
+    const errs = {};
+    if (!fields.name.trim()) errs.name = f.errRequired;
+    if (!fields.email.trim()) errs.email = f.errRequired;
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) errs.email = f.errEmail;
+    if (!fields.message.trim()) errs.message = f.errRequired;
+    else if (fields.message.trim().length < 20) errs.message = f.errMessage;
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  }
+
+  function onSubmit(e) {
+    e.preventDefault();
+    if (!validate()) return;
+    setSending(true);
+    // Placeholder de Web3Forms: simula envío
+    setTimeout(() => { setSending(false); setSent(true); }, 900);
+  }
+
+  function copyEmail(e) {
+    e.preventDefault();
+    const email = 'hola@spacedev.example'; // placeholder
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(email).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1800);
+      });
+    }
+  }
+
+  const field = (key, label, input) => (
+    <div className={'form-field' + (errors[key] ? ' has-error' : '')}>
+      <label htmlFor={'fld-' + key}>{label}</label>
+      {input}
+      {errors[key] && <span className="field-error">{errors[key]}</span>}
+    </div>
+  );
+
+  return (
+    <section className="site-section" id="contacto" ref={ref} data-screen-label="Contacto">
+      <div className="contact-grid">
+        <div className="contact-info">
+          <span className="section-label">{t.label}</span>
+          <h2 className="section-title">{t.title}</h2>
+          <p>{t.desc}</p>
+          <div className="contact-meta">
+            <span>{t.meta1}</span>
+            <span>{t.meta2}</span>
+          </div>
+          <div className="contact-methods">
+            <a className="contact-method" href="#" onClick={copyEmail}>
+              <span className="m-icon">@</span>{copied ? t.emailCopied : t.email}
+            </a>
+            <a className="contact-method" href="#" onClick={(e) => e.preventDefault()}>
+              <span className="m-icon">&lt;/&gt;</span>GitHub
+            </a>
+            <a className="contact-method" href="#" onClick={(e) => e.preventDefault()}>
+              <span className="m-icon">in</span>LinkedIn
+            </a>
+            <a className="contact-method" href="#" onClick={(e) => e.preventDefault()}>
+              <span className="m-icon">↓</span>{t.cv}
+            </a>
+          </div>
+        </div>
+
+        <form className="contact-form" onSubmit={onSubmit} noValidate aria-live="polite">
+          {sent ? (
+            <div className="form-success">
+              <div className="ok-ring">✓</div>
+              <h3 style={{ fontSize: 20, fontWeight: 600 }}>{f.successTitle}</h3>
+              <p style={{ color: 'var(--text-1)', fontSize: 15 }}>{f.successDesc}</p>
+              <button type="button" className="btn btn-ghost" onClick={() => { setSent(false); setFields({ name: '', email: '', type: '', budget: '', message: '' }); }}>
+                {f.sendAnother}
+              </button>
+            </div>
+          ) : (
+            <React.Fragment>
+              <div className="form-row">
+                {field('name', <span>{f.name} <span className="req">*</span></span>,
+                  <input id="fld-name" type="text" value={fields.name} onChange={set('name')} placeholder={f.namePh} />)}
+                {field('email', <span>{f.email} <span className="req">*</span></span>,
+                  <input id="fld-email" type="email" value={fields.email} onChange={set('email')} placeholder={f.emailPh} />)}
+              </div>
+              <div className="form-row">
+                {field('type', f.type,
+                  <select id="fld-type" value={fields.type} onChange={set('type')}>
+                    <option value="">—</option>
+                    {f.types.map((o) => <option key={o} value={o}>{o}</option>)}
+                  </select>)}
+                {field('budget', <span>{f.budget} <span style={{ color: 'var(--text-2)' }}>{f.optional}</span></span>,
+                  <select id="fld-budget" value={fields.budget} onChange={set('budget')}>
+                    <option value="">—</option>
+                    {f.budgets.map((o) => <option key={o} value={o}>{o}</option>)}
+                  </select>)}
+              </div>
+              {field('message', <span>{f.message} <span className="req">*</span></span>,
+                <textarea id="fld-message" rows={5} value={fields.message} onChange={set('message')} placeholder={f.messagePh}></textarea>)}
+              <div>
+                <button type="submit" className="btn btn-primary" disabled={sending}>
+                  {sending ? f.sending : f.send}
+                </button>
+              </div>
+            </React.Fragment>
+          )}
+        </form>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Footer ---------- */
+function Footer({ lang }) {
+  const t = window.I18N[lang];
+  const goTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });
+  };
+  return (
+    <footer className="site-footer" data-screen-label="Footer">
+      <div className="footer-inner">
+        <div>
+          <p className="footer-name">Alex Enriquez Vera</p>
+          <p className="footer-sub">{t.hero.subtitle}</p>
+          <p className="footer-copy">{t.footer.copyright}</p>
+        </div>
+        <div className="footer-col">
+          <h5>{t.footer.quickLinks}</h5>
+          <nav>
+            {window.NAV_IDS.slice(1).map((id) => (
+              <button key={id} onClick={() => goTo(id)}>{t.nav[id]}</button>
+            ))}
+          </nav>
+        </div>
+        <div className="footer-col">
+          <h5>{t.footer.social}</h5>
+          <div className="footer-social">
+            <a href="#" onClick={(e) => e.preventDefault()} aria-label="GitHub">GH</a>
+            <a href="#" onClick={(e) => e.preventDefault()} aria-label="LinkedIn">in</a>
+            <a href="#" onClick={(e) => e.preventDefault()} aria-label="Email">@</a>
+          </div>
+        </div>
+      </div>
+      <div className="footer-bottom">
+        {t.footer.builtWith} · {t.footer.version}
+      </div>
+    </footer>
+  );
+}
+
+Object.assign(window, { ContactSection, Footer });

@@ -1,0 +1,33 @@
+# Config local de Claude Code / agente
+.claude/
+
+# Dependencias (por si más adelante agregas un build con npm)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build / salida
+dist/
+build/
+graphify-out/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs
+*.log
+npm-debug.log*
