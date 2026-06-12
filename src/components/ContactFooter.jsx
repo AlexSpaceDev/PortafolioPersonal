@@ -7,6 +7,8 @@
 import React from 'react';
 import { I18N } from '../data/i18n.js';
 import { useReveal, NAV_IDS } from './Ui.jsx';
+import { Mail, Download, Check } from 'lucide-react';
+import { FaGithub, FaLinkedin } from 'react-icons/fa6';
 
 export function ContactSection({ lang }) {
   const t = I18N[lang].contact;
@@ -71,16 +73,16 @@ export function ContactSection({ lang }) {
           </div>
           <div className="contact-methods">
             <a className="contact-method" href="#" onClick={copyEmail}>
-              <span className="m-icon">@</span>{copied ? t.emailCopied : t.email}
+              <span className="m-icon"><Mail size={16} aria-hidden="true" /></span>{copied ? t.emailCopied : t.email}
             </a>
             <a className="contact-method" href="#" onClick={(e) => e.preventDefault()}>
-              <span className="m-icon">&lt;/&gt;</span>GitHub
+              <span className="m-icon"><FaGithub size={16} aria-hidden="true" /></span>GitHub
             </a>
             <a className="contact-method" href="#" onClick={(e) => e.preventDefault()}>
-              <span className="m-icon">in</span>LinkedIn
+              <span className="m-icon"><FaLinkedin size={16} aria-hidden="true" /></span>LinkedIn
             </a>
             <a className="contact-method" href="#" onClick={(e) => e.preventDefault()}>
-              <span className="m-icon">↓</span>{t.cv}
+              <span className="m-icon"><Download size={16} aria-hidden="true" /></span>{t.cv}
             </a>
           </div>
         </div>
@@ -88,7 +90,7 @@ export function ContactSection({ lang }) {
         <form className="contact-form" onSubmit={onSubmit} noValidate aria-live="polite">
           {sent ? (
             <div className="form-success">
-              <div className="ok-ring">✓</div>
+              <div className="ok-ring"><Check size={28} aria-hidden="true" /></div>
               <h3 style={{ fontSize: 20, fontWeight: 600 }}>{f.successTitle}</h3>
               <p style={{ color: 'var(--text-1)', fontSize: 15 }}>{f.successDesc}</p>
               <button type="button" className="btn btn-ghost" onClick={() => { setSent(false); setFields({ name: '', email: '', type: '', budget: '', message: '' }); }}>
@@ -156,9 +158,9 @@ export function Footer({ lang }) {
         <div className="footer-col">
           <h5>{t.footer.social}</h5>
           <div className="footer-social">
-            <a href="#" onClick={(e) => e.preventDefault()} aria-label="GitHub">GH</a>
-            <a href="#" onClick={(e) => e.preventDefault()} aria-label="LinkedIn">in</a>
-            <a href="#" onClick={(e) => e.preventDefault()} aria-label="Email">@</a>
+            <a href="#" onClick={(e) => e.preventDefault()} aria-label="GitHub"><FaGithub size={17} aria-hidden="true" /></a>
+            <a href="#" onClick={(e) => e.preventDefault()} aria-label="LinkedIn"><FaLinkedin size={17} aria-hidden="true" /></a>
+            <a href="#" onClick={(e) => e.preventDefault()} aria-label="Email"><Mail size={17} aria-hidden="true" /></a>
           </div>
         </div>
       </div>

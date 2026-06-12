@@ -45,11 +45,11 @@ export const I18N = {
       projects: 'proyectos',
       project: 'proyecto'
     },
-    filters: { all: 'Todos', web: 'Web', apps: 'Apps', games: 'Videojuegos', xr: 'VR/AR', backend: 'Backend', tools: 'Herramientas', design: 'Diseño' },
+    filters: { all: 'Todos', web: 'Web', apps: 'Apps', games: 'Videojuegos', xr: 'VR/AR', backend: 'Backend', tools: 'Herramientas', design: 'Diseño', deploy: 'Deploy' },
     projects: {
       label: '// 03 PROYECTOS',
-      title: 'Nuestros Archivos',
-      intro: 'Aquí puedes echar un vistazo a los proyectos que he creado o en los que he participado — al menos los que **no son confidenciales**. Cada uno cuenta una historia distinta, con su propio stack y su propia razón de existir.',
+      title: 'Los Archivos',
+      intro: 'Aquí puedes echar un vistazo a los proyectos que he creado o en los que he participado — al menos los que **no son confidenciales** 🕵️. Cada uno cuenta una historia distinta, con su propio stack y su propia razón de existir.',
       filteringBy: 'Filtrando por:',
       seeMore: 'Mostrar todo',
       seeLess: 'Mostrar menos',
@@ -170,11 +170,11 @@ export const I18N = {
       projects: 'projects',
       project: 'project'
     },
-    filters: { all: 'All', web: 'Web', apps: 'Apps', games: 'Games', xr: 'VR/AR', backend: 'Backend', tools: 'Tools', design: 'Design' },
+    filters: { all: 'All', web: 'Web', apps: 'Apps', games: 'Games', xr: 'VR/AR', backend: 'Backend', tools: 'Tools', design: 'Design', deploy: 'Deploy' },
     projects: {
       label: '// 03 PROJECTS',
       title: 'Our Archives',
-      intro: "Here you can take a look at the projects I've created or contributed to — at least the ones that **aren't confidential**. Each one tells a different story, with its own stack and its own reason to exist.",
+      intro: "Here you can take a look at the projects I've created or contributed to — at least the ones that **aren't confidential** 🕵️. Each one tells a different story, with its own stack and its own reason to exist.",
       filteringBy: 'Filtering by:',
       seeMore: 'Show all',
       seeLess: 'Show less',

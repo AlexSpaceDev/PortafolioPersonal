@@ -6,6 +6,9 @@
    - techLabels: solo tecnologías PRINCIPALES (las implícitas
      como Git/GitHub/VSCode irán en el detalle expandido, que
      se trabaja en una iteración futura).
+   - image: ruta a la imagen de la card en public/ (subcarpeta por
+     categoría principal: /images/projects/<cat>/<id>.webp). Mientras
+     el archivo no exista, la card cae al placeholder automáticamente.
    - live: URL pública (null si no aplica / en desarrollo).
    - github: null => botón "Ver código" oculto (repos pendientes
      de pasar — ver README).
@@ -18,6 +21,7 @@ export const PROJECTS = [
   {
     id: 'club-exploradores',
     cats: ['web'],
+    image: '/images/projects/web/club-exploradores.webp',
     tech: ['astro', 'react', 'tailwind', 'typescript', 'vscode', 'git', 'github'],
     techLabels: ['Astro', 'React', 'Tailwind CSS', 'TypeScript'],
     live: 'https://clubdeexploradores.com/',
@@ -36,6 +40,7 @@ export const PROJECTS = [
   {
     id: 'rompamos-el-tabu',
     cats: ['web'],
+    image: '/images/projects/web/rompamos-el-tabu.webp',
     tech: ['joomla', 'javascript', 'css', 'vscode', 'git', 'github'],
     techLabels: ['Joomla', 'JavaScript', 'CSS'],
     live: 'https://rompamoseltabu.com/',
@@ -54,6 +59,7 @@ export const PROJECTS = [
   {
     id: 'space-dev',
     cats: ['web'],
+    image: '/images/projects/web/space-dev.webp',
     tech: ['astro', 'react', 'tailwind', 'typescript', 'vscode', 'git', 'github'],
     techLabels: ['Astro', 'React', 'Tailwind CSS', 'TypeScript'],
     live: 'https://spacedev.me',
@@ -72,6 +78,7 @@ export const PROJECTS = [
   {
     id: 'ponte-en-sus-patitas',
     cats: ['web'],
+    image: '/images/projects/web/ponte-en-sus-patitas.webp',
     tech: ['joomla', 'javascript', 'css', 'vscode', 'git', 'github'],
     techLabels: ['Joomla', 'JavaScript', 'CSS'],
     live: 'https://ponteensuspatitas.com/',
@@ -90,6 +97,7 @@ export const PROJECTS = [
   {
     id: 'trazando-pasos',
     cats: ['games'],
+    image: '/images/projects/games/trazando-pasos.webp',
     tech: ['unreal', 'vscode', 'git', 'github'],
     techLabels: ['Unreal Engine'],
     live: 'https://www.behance.net/gallery/166470549/Trazando-Pasos-(videojuego-VR)-(2023)',
@@ -108,6 +116,7 @@ export const PROJECTS = [
   {
     id: 'plantain-feast',
     cats: ['games'],
+    image: '/images/projects/games/plantain-feast.webp',
     tech: ['unreal', 'vscode', 'git', 'github'],
     techLabels: ['Unreal Engine'],
     live: 'https://www.behance.net/gallery/166078851/Plantain-Feast',
@@ -126,6 +135,7 @@ export const PROJECTS = [
     {
     id: 'alfareria-metalurgia-ar',
     cats: ['games', 'xr'],
+    image: '/images/projects/games/alfareria-metalurgia-ar.webp',
     tech: ['unity', 'csharp', 'vscode', 'git', 'github'],
     techLabels: ['Unity', 'C#'],
     live: null,
@@ -144,6 +154,7 @@ export const PROJECTS = [
   {
     id: 'pets',
     cats: ['apps'],
+    image: '/images/projects/apps/pets.webp',
     tech: ['flutter', 'supabase', 'vscode', 'git', 'github'],
     techLabels: ['Flutter', 'Supabase'],
     live: null, // proyecto en desarrollo
@@ -162,6 +173,7 @@ export const PROJECTS = [
   {
     id: 'alerta',
     cats: ['xr'],
+    image: '/images/projects/xr/alerta.webp',
     tech: ['lensstudio', 'javascript', 'vscode', 'git', 'github'],
     techLabels: ['Lens Studio', 'JavaScript'],
     live: 'https://www.expreso.ec/guayaquil/arte-interactivo-busca-sensibilizar-enos-salud-mental-213527.html',
@@ -180,6 +192,7 @@ export const PROJECTS = [
   {
     id: 'soldadura-vr',
     cats: ['xr'],
+    image: '/images/projects/xr/soldadura-vr.webp',
     tech: ['unity', 'csharp', 'metaquest', 'vscode', 'git', 'github'],
     techLabels: ['Unity', 'C#', 'Meta Quest 2'],
     live: null, // documentación privada / presentación del proyecto

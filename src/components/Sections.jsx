@@ -14,10 +14,12 @@ import { PROJECTS } from '../data/projects.js';
 import { EXPERIENCE } from '../data/experience.js';
 import { useReveal, Bold } from './Ui.jsx';
 import { Constellation } from './Constellation.jsx';
+import { ArrowRight, ExternalLink, Clock, X, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { FaGithub } from 'react-icons/fa6';
 
 export const FILTER_KEYS = ['all', 'web', 'apps', 'games', 'xr'];
 // Filtros secundarios de la constelación (se despliegan con el botón ✦)
-export const SECONDARY_FILTER_KEYS = ['backend', 'design', 'tools'];
+export const SECONDARY_FILTER_KEYS = ['backend', 'design', 'tools', 'deploy'];
 
 /* ---------- Habilidades ---------- */
 export function SkillsSection({ lang, filter, setFilter, onStarClick, reducedMotion }) {
@@ -67,6 +69,7 @@ export function ProjectCard({ project, lang, index, onOpen }) {
   const t = I18N[lang];
   const c = project[lang];
   const cardRef = React.useRef(null);
+  const [imgError, setImgError] = React.useState(false);
 
   // Entrada escalonada al entrar en viewport (scroll-based, robusto)
   React.useEffect(() => {
@@ -101,9 +104,19 @@ export function ProjectCard({ project, lang, index, onOpen }) {
         <div className="badge-cat-row">
           {project.cats.map((cat) => <span className="badge-cat" key={cat}>{t.filters[cat]}</span>)}
         </div>
-        <div className="img-placeholder">
-          <span className="ph-label">[ captura — {c.title} ]</span>
-        </div>
+        {project.image && !imgError ? (
+          <img
+            className="project-img-el"
+            src={project.image}
+            alt={c.title}
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="img-placeholder">
+            <span className="ph-label">[ captura — {c.title} ]</span>
+          </div>
+        )}
       </div>
       <div className="project-body">
         <h3 className="project-title">{c.title}</h3>
@@ -113,7 +126,7 @@ export function ProjectCard({ project, lang, index, onOpen }) {
         </div>
         <div className="project-footer">
           <button className="project-link" onClick={(e) => { e.stopPropagation(); onOpen(project.id); }}>
-            {t.projects.details} →
+            {t.projects.details} <ArrowRight size={15} aria-hidden="true" />
           </button>
           {/* "Ver código" vive ahora dentro del modal de detalle */}
           {project.live ? (
@@ -125,10 +138,10 @@ export function ProjectCard({ project, lang, index, onOpen }) {
               onClick={(e) => e.stopPropagation()}
               aria-label={t.projects.visit + ' — ' + c.title}
             >
-              {t.projects.visit} ↗
+              {t.projects.visit} <ExternalLink size={14} aria-hidden="true" />
             </a>
           ) : (
-            <span className="project-status">{t.projects.inProgress}</span>
+            <span className="project-status"><Clock size={13} aria-hidden="true" /> {t.projects.inProgress}</span>
           )}
         </div>
       </div>
@@ -170,7 +183,7 @@ export function ProjectsSection({ lang, filter, setFilter, techFilter, clearTech
       {techFilter && (
         <div className="tech-filter-pill">
           <span>{t.projects.filteringBy} {techFilter.name}</span>
-          <button onClick={clearTechFilter} aria-label="Quitar filtro">×</button>
+          <button onClick={clearTechFilter} aria-label="Quitar filtro"><X size={14} aria-hidden="true" /></button>
         </div>
       )}
       <div className="filter-row" role="group" aria-label="Filtros de proyectos">
@@ -205,6 +218,7 @@ export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
   const t = I18N[lang].modal;
   const closeRef = React.useRef(null);
   const project = PROJECTS.find((p) => p.id === projectId);
+  const [imgError, setImgError] = React.useState(false);
 
   React.useEffect(() => {
     if (!project) return;
@@ -234,18 +248,27 @@ export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
     <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="modal-box" role="dialog" aria-modal="true" aria-label={c.title}>
         <div className="modal-header">
-          <button className="modal-nav-btn" onClick={() => onNavigate(-1)} aria-label={t.prev}>←</button>
+          <button className="modal-nav-btn" onClick={() => onNavigate(-1)} aria-label={t.prev}><ChevronLeft size={20} aria-hidden="true" /></button>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h3 className="modal-title">{c.title}</h3>
             <span className="modal-meta">{catName}{project.year ? ' · ' + project.year : ''}</span>
           </div>
-          <button className="modal-nav-btn" onClick={() => onNavigate(1)} aria-label={t.next}>→</button>
-          <button className="modal-close" ref={closeRef} onClick={onClose} aria-label={t.close}>×</button>
+          <button className="modal-nav-btn" onClick={() => onNavigate(1)} aria-label={t.next}><ChevronRight size={20} aria-hidden="true" /></button>
+          <button className="modal-close" ref={closeRef} onClick={onClose} aria-label={t.close}><X size={20} aria-hidden="true" /></button>
         </div>
         <div className="modal-content">
-          <div className="modal-hero img-placeholder">
-            <span className="ph-label">[ imagen principal — {c.title} ]</span>
-          </div>
+          {project.image && !imgError ? (
+            <img
+              className="modal-hero-img"
+              src={project.image}
+              alt={c.title}
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="modal-hero img-placeholder">
+              <span className="ph-label">[ imagen principal — {c.title} ]</span>
+            </div>
+          )}
           {c.summary && (
             <div className="cs-block">
               <h4>{t.summary}</h4>
@@ -289,10 +312,10 @@ export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
           {(project.live || project.github) && (
             <div className="modal-footer-links">
               {project.live && (
-                <a className="btn btn-primary" href={project.live} target="_blank" rel="noopener noreferrer">{t.live} ↗</a>
+                <a className="btn btn-primary" href={project.live} target="_blank" rel="noopener noreferrer">{t.live} <ExternalLink size={15} aria-hidden="true" /></a>
               )}
               {project.github && (
-                <a className="btn btn-outline" href={project.github} target="_blank" rel="noopener noreferrer">{t.github} ↗</a>
+                <a className="btn btn-outline" href={project.github} target="_blank" rel="noopener noreferrer"><FaGithub size={15} aria-hidden="true" /> {t.github}</a>
               )}
             </div>
           )}

@@ -6,6 +6,7 @@
 import React from 'react';
 import { I18N } from '../data/i18n.js';
 import { Hero3D } from './Hero3D.jsx';
+import { ArrowRight, ArrowDown } from 'lucide-react';
 
 /* ---------- Hooks compartidos ---------- */
 export function useReveal() {
@@ -248,8 +249,8 @@ export function Hero({ lang, status, onPlanetClick, reducedMotion }) {
         <p className="hero-subtitle">{t.hero.subtitle}</p>
         <p className="hero-desc">{t.hero.desc}</p>
         <div className="hero-actions">
-          <button className="btn btn-primary" onClick={() => goTo('proyectos')}>{t.hero.ctaPrimary}</button>
-          <button className="btn btn-outline" onClick={() => goTo('contacto')}>{t.hero.ctaSecondary}</button>
+          <button className="btn btn-primary" onClick={() => goTo('proyectos')}>{t.hero.ctaPrimary} <ArrowRight size={17} aria-hidden="true" /></button>
+          <button className="btn btn-outline" onClick={() => goTo('contacto')}>{t.hero.ctaSecondary} <ArrowDown size={17} aria-hidden="true" /></button>
         </div>
       </div>
     </div>
@@ -300,13 +301,25 @@ export function StatNumber({ value, suffix }) {
 export function About({ lang }) {
   const t = I18N[lang].about;
   const ref = useReveal();
+  const [imgError, setImgError] = React.useState(false);
+  const photo = '/images/about/alex-enriquez-cv-pic.webp';
   return (
     <section className="site-section" id="sobre" ref={ref}>
       <div className="about-grid">
         <div className="about-frame">
-          <div className="about-photo img-placeholder" role="img" aria-label={t.photoPh}>
-            <span className="ph-label">{t.photoPh}</span>
-          </div>
+          {!imgError ? (
+            <img
+              className="about-photo-img"
+              src={photo}
+              alt={t.photoAlt || 'Alex Enriquez Vera'}
+              loading="lazy"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="about-photo img-placeholder" role="img" aria-label={t.photoPh}>
+              <span className="ph-label">{t.photoPh}</span>
+            </div>
+          )}
         </div>
         <div className="about-text">
           <span className="section-label">{t.label}</span>

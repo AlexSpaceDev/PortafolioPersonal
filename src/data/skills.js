@@ -53,6 +53,11 @@ export const SKILLS = [
   { id: 'git',        name: 'Git',          cat: 'tools',   cats: ['tools', 'web', 'apps', 'games', 'xr'], x: 0.60, y: 0.90, size: 0.95, main: false, enabled: true, projects: 10 },
   { id: 'github',     name: 'GitHub',       cat: 'tools',   cats: ['tools', 'web', 'apps', 'games', 'xr'], x: 0.70, y: 0.84, size: 0.95, main: false, enabled: true, projects: 10 },
 
+  // --- Deploy / hosting (filtro secundario) ---
+  { id: 'vercel',      name: 'Vercel',      cat: 'deploy',  x: 0.82, y: 0.76, size: 0.95, main: false, enabled: true,  projects: 0 },
+  { id: 'hostinger',   name: 'Hostinger',   cat: 'deploy',  x: 0.91, y: 0.88, size: 0.95, main: false, enabled: true,  projects: 0 },
+  { id: 'ecuahosting', name: 'EcuaHosting', cat: 'deploy',  x: 0.94, y: 0.70, size: 0.9,  main: false, enabled: true,  projects: 0 },
+
   // --- Diseño (filtro secundario — subsección con Behance pendiente) ---
   { id: 'figma',      name: 'Figma',        cat: 'design',  x: 0.27, y: 0.80, size: 0.95, main: false, enabled: true,  projects: 0 },
   { id: 'illustrator', name: 'Illustrator', cat: 'design',  x: 0.04, y: 0.94, size: 0.85, main: false, enabled: false, projects: 0 },
@@ -82,6 +87,8 @@ export const SKILL_LINKS = [
   // Herramientas transversales (una conexión por especialidad)
   ['vscode', 'tailwind'], ['vscode', 'flutter'], ['vscode', 'unreal'], ['vscode', 'lensstudio'],
   ['git', 'github'], ['git', 'vscode'],
+  // Deploy / hosting
+  ['vercel', 'github'], ['vercel', 'hostinger'], ['hostinger', 'ecuahosting'],
   // Diseño
   ['figma', 'css'], ['figma', 'vscode']
 ];
