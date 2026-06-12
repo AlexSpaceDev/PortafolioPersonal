@@ -1,5 +1,8 @@
 /* ============================================================
    Proyectos — iteración v1.0.0
+   - cats: array de categorías. Un proyecto puede pertenecer a
+     varias (ej. ['games', 'xr']); aparece en todos esos filtros
+     y muestra un badge por cada una. La primera es la principal.
    - techLabels: solo tecnologías PRINCIPALES (las implícitas
      como Git/GitHub/VSCode irán en el detalle expandido, que
      se trabaja en una iteración futura).
@@ -13,10 +16,28 @@
 
 export const PROJECTS = [
   {
+    id: 'club-exploradores',
+    cats: ['web'],
+    tech: ['astro', 'react', 'tailwind', 'typescript'],
+    techLabels: ['Astro', 'React', 'Tailwind CSS', 'TypeScript'],
+    live: 'https://clubdeexploradores.com/',
+    github: null,
+    es: {
+      title: 'Club de Exploradores',
+      desc: 'Sitio web gamificado que acompaña al puzzle físico Puzzle Animales Ecuador de Print Craft.',
+      summary: 'Sitio web gamificado que acompaña al puzzle físico Puzzle Animales Ecuador de Print Craft. Los niños escanean el QR de la caja, completan misiones organizadas por etapas, ganan puntos y desbloquean a los animales ecuatorianos en una colección digital.'
+    },
+    en: {
+      title: 'Club de Exploradores',
+      desc: 'Gamified website that accompanies the physical puzzle Puzzle Animales Ecuador by Print Craft.',
+      summary: 'Gamified website that accompanies the physical puzzle Puzzle Animales Ecuador by Print Craft. Children scan the QR code on the box, complete missions organized by stages, earn points and unlock Ecuadorian animals in a digital collection.'
+    }
+  },  
+  {
     id: 'rompamos-el-tabu',
-    cat: 'web',
-    tech: ['joomla', 'javascript'],
-    techLabels: ['Joomla', 'JavaScript'],
+    cats: ['web'],
+    tech: ['joomla', 'javascript', 'css'],
+    techLabels: ['Joomla', 'JavaScript', 'CSS'],
     live: 'https://rompamoseltabu.com/',
     github: null,
     es: {
@@ -32,7 +53,7 @@ export const PROJECTS = [
   },
   {
     id: 'space-dev',
-    cat: 'web',
+    cats: ['web'],
     tech: ['astro', 'react', 'tailwind', 'typescript'],
     techLabels: ['Astro', 'React', 'Tailwind CSS', 'TypeScript'],
     live: 'https://spacedev.me',
@@ -49,8 +70,26 @@ export const PROJECTS = [
     }
   },
   {
+    id: 'ponte-en-sus-patitas',
+    cats: ['web'],
+    tech: ['joomla', 'javascript', 'css'],
+    techLabels: ['Joomla', 'JavaScript', 'CSS'],
+    live: 'https://ponteensuspatitas.com/',
+    github: null,
+    es: {
+      title: 'Ponte en sus Patitas',
+      desc: 'Ponte en sus patitas es la campaña de prelanzamiento oficial de Pets.',
+      summary: 'Ponte en sus patitas es la campaña de prelanzamiento oficial de Pets. Pensada para construir emociones, identidad y propósito antes del lanzamiento inicial de la app.'
+    },
+    en: {
+      title: 'Ponte en sus Patitas',
+      desc: 'Ponte en sus patitas is the official pre-launch campaign for Pets.',
+      summary: 'Ponte en sus patitas is the official pre-launch campaign for Pets. Designed to build emotions, identity, and purpose before the initial app launch.'
+    }
+  },
+  {
     id: 'trazando-pasos',
-    cat: 'games',
+    cats: ['games'],
     tech: ['unreal'],
     techLabels: ['Unreal Engine'],
     live: 'https://www.behance.net/gallery/166470549/Trazando-Pasos-(videojuego-VR)-(2023)',
@@ -68,7 +107,7 @@ export const PROJECTS = [
   },
   {
     id: 'plantain-feast',
-    cat: 'games',
+    cats: ['games'],
     tech: ['unreal'],
     techLabels: ['Unreal Engine'],
     live: 'https://www.behance.net/gallery/166078851/Plantain-Feast',
@@ -84,9 +123,27 @@ export const PROJECTS = [
       summary: '2D mobile cooking game inspired by Ecuadorian gastronomy. Players prepare traditional recipes using plantain as the main ingredient, promoting local culinary culture.'
     }
   },
+    {
+    id: 'alfareria-metalurgia-ar',
+    cats: ['games', 'xr'],
+    tech: ['unity', 'csharp'],
+    techLabels: ['Unity', 'C#'],
+    live: null,
+    github: null,
+    es: {
+      title: 'Alfarería y Metalurgia AR',
+      desc: 'Experiencia AR sobre la alfarería y metalurgia ecuatoriana.',
+      summary: 'Experiencia de realidad aumentada que explora las tradiciones de alfarería y metalurgia en Ecuador. Permite a los usuarios interactuar con objetos 3D y aprender sobre estas artes tradicionales.'
+    },
+    en: {
+      title: 'Alfarería y Metalurgia AR',
+      desc: 'AR experience about Ecuadorian pottery and metallurgy.',
+      summary: 'Augmented reality experience that explores the traditions of pottery and metallurgy in Ecuador. It allows users to interact with 3D objects and learn about these traditional arts.'
+    }
+  },
   {
     id: 'pets',
-    cat: 'apps',
+    cats: ['apps'],
     tech: ['flutter', 'supabase'],
     techLabels: ['Flutter', 'Supabase'],
     live: null, // proyecto en desarrollo
@@ -104,7 +161,7 @@ export const PROJECTS = [
   },
   {
     id: 'alerta',
-    cat: 'xr',
+    cats: ['xr'],
     tech: ['lensstudio', 'javascript'],
     techLabels: ['Lens Studio', 'JavaScript'],
     live: 'https://www.expreso.ec/guayaquil/arte-interactivo-busca-sensibilizar-enos-salud-mental-213527.html',
@@ -122,7 +179,7 @@ export const PROJECTS = [
   },
   {
     id: 'soldadura-vr',
-    cat: 'xr',
+    cats: ['xr'],
     tech: ['unity', 'csharp', 'metaquest'],
     techLabels: ['Unity', 'C#', 'Meta Quest 2'],
     live: null, // documentación privada / presentación del proyecto

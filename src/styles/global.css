@@ -594,7 +594,10 @@ section.site-section {
   aspect-ratio: 16 / 9;
   position: relative;
 }
-.project-img .badge-cat { position: absolute; top: 14px; left: 14px; z-index: 2; }
+.project-img .badge-cat-row {
+  position: absolute; top: 14px; left: 14px; z-index: 2;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
 .project-img .img-placeholder {
   position: absolute; inset: 0; border: none;
   transition: transform 0.5s ease;

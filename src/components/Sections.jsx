@@ -41,7 +41,6 @@ export function SkillsSection({ lang, filter, setFilter, onStarClick, reducedMot
 export function ProjectCard({ project, lang, index, onOpen }) {
   const t = I18N[lang];
   const c = project[lang];
-  const catName = t.filters[project.cat];
   const cardRef = React.useRef(null);
 
   // Entrada escalonada al entrar en viewport (scroll-based, robusto)
@@ -74,7 +73,9 @@ export function ProjectCard({ project, lang, index, onOpen }) {
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onOpen(project.id); } }}
     >
       <div className="project-img">
-        <span className="badge-cat">{catName}</span>
+        <div className="badge-cat-row">
+          {project.cats.map((cat) => <span className="badge-cat" key={cat}>{t.filters[cat]}</span>)}
+        </div>
         <div className="img-placeholder">
           <span className="ph-label">[ captura — {c.title} ]</span>
         </div>
@@ -114,7 +115,7 @@ export function ProjectsSection({ lang, filter, setFilter, techFilter, clearTech
   const ref = useReveal();
   const [expanded, setExpanded] = React.useState(false);
 
-  let list = PROJECTS.filter((p) => filter === 'all' || p.cat === filter);
+  let list = PROJECTS.filter((p) => filter === 'all' || p.cats.includes(filter));
   if (techFilter) list = list.filter((p) => p.tech.includes(techFilter.id));
   const visible = expanded ? list : list.slice(0, 4);
 
@@ -185,7 +186,7 @@ export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
 
   if (!project) return null;
   const c = project[lang];
-  const catName = I18N[lang].filters[project.cat];
+  const catName = project.cats.map((cat) => I18N[lang].filters[cat]).join(' · ');
 
   return (
     <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
