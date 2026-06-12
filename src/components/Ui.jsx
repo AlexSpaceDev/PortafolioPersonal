@@ -1,9 +1,14 @@
 /* ============================================================
-   UI base: boot sequence, cursor custom, header, hero, sobre mí
+   UI base: hooks, boot sequence, cursor custom, header, hero,
+   sobre mí. (Portado del prototipo de Claude Design a módulos ES.)
    ============================================================ */
 
+import React from 'react';
+import { I18N } from '../data/i18n.js';
+import { Hero3D } from './Hero3D.jsx';
+
 /* ---------- Hooks compartidos ---------- */
-function useReveal() {
+export function useReveal() {
   const ref = React.useRef(null);
   React.useEffect(() => {
     const el = ref.current;
@@ -26,28 +31,28 @@ function useReveal() {
   return ref;
 }
 
-function useReducedMotion() {
+export function useReducedMotion() {
   const [rm] = React.useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   return rm;
 }
 
 /* ---------- Boot sequence (primera visita) ---------- */
-function BootSequence({ lang, replayToken, onDone }) {
+export function BootSequence({ lang, onDone }) {
   const [visible, setVisible] = React.useState(false);
   const [lineCount, setLineCount] = React.useState(0);
   const [fading, setFading] = React.useState(false);
-  const lines = window.I18N[lang].boot;
+  const lines = I18N[lang].boot;
   const rm = useReducedMotion();
 
   React.useEffect(() => {
     if (rm) return;
     const seen = localStorage.getItem('ae_boot_seen');
-    if (seen && !replayToken) return;
+    if (seen) return;
     setVisible(true);
     setFading(false);
     setLineCount(0);
     localStorage.setItem('ae_boot_seen', '1');
-  }, [replayToken]);
+  }, []);
 
   React.useEffect(() => {
     if (!visible || fading) return;
@@ -87,13 +92,13 @@ function BootSequence({ lang, replayToken, onDone }) {
         ))}
         <span className="boot-caret"></span>
       </div>
-      <span className="boot-skip">{window.I18N[lang].bootSkip}</span>
+      <span className="boot-skip">{I18N[lang].bootSkip}</span>
     </div>
   );
 }
 
 /* ---------- Cursor custom (solo desktop, respeta reduced motion) ---------- */
-function CustomCursor({ enabled }) {
+export function CustomCursor({ enabled }) {
   const dotRef = React.useRef(null);
   const rm = useReducedMotion();
   const active = enabled && !rm && window.matchMedia('(pointer: fine)').matches;
@@ -132,29 +137,29 @@ function CustomCursor({ enabled }) {
 }
 
 /* ---------- Status en vivo ---------- */
-const STATUS_META = {
+export const STATUS_META = {
   available: { color: '#4ADE80', glow: 'rgba(74,222,128,0.5)' },
   limited:   { color: '#F4B860', glow: 'rgba(244,184,96,0.5)' },
   closed:    { color: '#F87171', glow: 'rgba(248,113,113,0.5)' }
 };
 
-function StatusPill({ lang, status }) {
+export function StatusPill({ lang, status }) {
   const meta = STATUS_META[status] || STATUS_META.available;
   return (
-    <div className="status-pill" title="Status — sincronizado desde Supabase">
+    <div className="status-pill" title="Status — pendiente sincronizar desde Supabase">
       <span className="status-dot" style={{ background: meta.color, '--dot-glow': meta.glow }}></span>
-      <span className="status-text">{window.I18N[lang].status[status]}</span>
+      <span className="status-text">{I18N[lang].status[status]}</span>
     </div>
   );
 }
 
 /* ---------- Header ---------- */
-const NAV_IDS = ['inicio', 'sobre', 'habilidades', 'proyectos', 'experiencia', 'proceso', 'contacto'];
+export const NAV_IDS = ['inicio', 'sobre', 'habilidades', 'proyectos', 'experiencia', 'proceso', 'contacto'];
 
-function Header({ lang, setLang, status, activeSection, logoStyle }) {
+export function Header({ lang, setLang, status, activeSection, logoStyle }) {
   const [scrolled, setScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const t = window.I18N[lang];
+  const t = I18N[lang];
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -186,7 +191,7 @@ function Header({ lang, setLang, status, activeSection, logoStyle }) {
         <a className="logo" href="#inicio" onClick={(e) => { e.preventDefault(); goTo('inicio'); }} aria-label="Inicio">
           {logoStyle === 'ae'
             ? (<span><span className="logo-bracket">[</span>AE<span className="logo-bracket">]</span></span>)
-            : (<span>Alex<span className="logo-bracket">_</span>Enriquez</span>)}
+            : (<span>Alex<span className="logo-bracket">_</span>DEV</span>)}
         </a>
         <nav className="nav-desktop" aria-label="Navegación principal">{navLinks()}</nav>
         <div className="lang-toggle" role="group" aria-label="Idioma">
@@ -212,9 +217,13 @@ function Header({ lang, setLang, status, activeSection, logoStyle }) {
   );
 }
 
-/* ---------- Hero ---------- */
-function Hero({ lang, status, onPlanetClick, reducedMotion }) {
-  const t = window.I18N[lang];
+/* ---------- Hero ----------
+   El sistema orbital es una capa de FONDO ambiental (absolute,
+   detrás del texto, extendida hasta los bordes del hero sin
+   recortes). El texto va encima con pointer-events selectivos
+   para que el hover/click de los planetas siga funcionando. */
+export function Hero({ lang, status, onPlanetClick, reducedMotion }) {
+  const t = I18N[lang];
   const meta = STATUS_META[status] || STATUS_META.available;
 
   const goTo = (id) => {
@@ -223,7 +232,8 @@ function Hero({ lang, status, onPlanetClick, reducedMotion }) {
   };
 
   return (
-    <div className="hero" id="inicio" data-screen-label="Hero">
+    <div className="hero" id="inicio">
+      <Hero3D lang={lang} onPlanetClick={onPlanetClick} reducedMotion={reducedMotion} />
       <div className="hero-content">
         <div className="hero-badge">
           <span className="status-dot" style={{ background: meta.color, '--dot-glow': meta.glow }}></span>
@@ -238,13 +248,12 @@ function Hero({ lang, status, onPlanetClick, reducedMotion }) {
           <button className="btn btn-outline" onClick={() => goTo('contacto')}>{t.hero.ctaSecondary}</button>
         </div>
       </div>
-      <Hero3D lang={lang} onPlanetClick={onPlanetClick} reducedMotion={reducedMotion} />
     </div>
   );
 }
 
 /* ---------- Contador animado ---------- */
-function StatNumber({ value, suffix }) {
+export function StatNumber({ value, suffix }) {
   const ref = React.useRef(null);
   const [n, setN] = React.useState(0);
   const startedRef = React.useRef(false);
@@ -284,11 +293,11 @@ function StatNumber({ value, suffix }) {
 }
 
 /* ---------- Sobre mí ---------- */
-function About({ lang }) {
-  const t = window.I18N[lang].about;
+export function About({ lang }) {
+  const t = I18N[lang].about;
   const ref = useReveal();
   return (
-    <section className="site-section" id="sobre" ref={ref} data-screen-label="Sobre mí">
+    <section className="site-section" id="sobre" ref={ref}>
       <div className="about-grid">
         <div className="about-frame">
           <div className="about-photo img-placeholder" role="img" aria-label={t.photoPh}>
@@ -313,9 +322,3 @@ function About({ lang }) {
     </section>
   );
 }
-
-Object.assign(window, {
-  useReveal, useReducedMotion,
-  BootSequence, CustomCursor, StatusPill, Header, Hero, About, StatNumber,
-  NAV_IDS, STATUS_META
-});

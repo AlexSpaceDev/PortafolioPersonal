@@ -1,9 +1,15 @@
 /* ============================================================
    Contacto + Footer
+   v1.0.0: firma "Alex DEV", copyright actualizado, versión 1.0.0.
+   El formulario sigue simulando el envío (Web3Forms pendiente).
    ============================================================ */
 
-function ContactSection({ lang }) {
-  const t = window.I18N[lang].contact;
+import React from 'react';
+import { I18N } from '../data/i18n.js';
+import { useReveal, NAV_IDS } from './Ui.jsx';
+
+export function ContactSection({ lang }) {
+  const t = I18N[lang].contact;
   const f = t.form;
   const ref = useReveal();
   const [fields, setFields] = React.useState({ name: '', email: '', type: '', budget: '', message: '' });
@@ -53,7 +59,7 @@ function ContactSection({ lang }) {
   );
 
   return (
-    <section className="site-section" id="contacto" ref={ref} data-screen-label="Contacto">
+    <section className="site-section" id="contacto" ref={ref}>
       <div className="contact-grid">
         <div className="contact-info">
           <span className="section-label">{t.label}</span>
@@ -125,24 +131,24 @@ function ContactSection({ lang }) {
 }
 
 /* ---------- Footer ---------- */
-function Footer({ lang }) {
-  const t = window.I18N[lang];
+export function Footer({ lang }) {
+  const t = I18N[lang];
   const goTo = (id) => {
     const el = document.getElementById(id);
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 70, behavior: 'smooth' });
   };
   return (
-    <footer className="site-footer" data-screen-label="Footer">
+    <footer className="site-footer">
       <div className="footer-inner">
         <div>
-          <p className="footer-name">Alex Enriquez Vera</p>
-          <p className="footer-sub">{t.hero.subtitle}</p>
+          <p className="footer-name">Alex DEV</p>
+          <p className="footer-sub">{t.footer.tagline}</p>
           <p className="footer-copy">{t.footer.copyright}</p>
         </div>
         <div className="footer-col">
           <h5>{t.footer.quickLinks}</h5>
           <nav>
-            {window.NAV_IDS.slice(1).map((id) => (
+            {NAV_IDS.slice(1).map((id) => (
               <button key={id} onClick={() => goTo(id)}>{t.nav[id]}</button>
             ))}
           </nav>
@@ -162,5 +168,3 @@ function Footer({ lang }) {
     </footer>
   );
 }
-
-Object.assign(window, { ContactSection, Footer });

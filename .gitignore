@@ -1,16 +1,14 @@
 # Config local de Claude Code / agente
 .claude/
 
-# Dependencias (por si más adelante agregas un build con npm)
+# Dependencias
 node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 # Build / salida
 dist/
 build/
 graphify-out/
+.astro/
 
 # Variables de entorno
 .env

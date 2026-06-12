@@ -1,57 +1,70 @@
-# Portafolio Personal — Alex Enriquez Vera
+# Portafolio Personal — ALEX DEV
 
-Portafolio personal de **Alex Enriquez Vera (SPACE DEV)**: Software Developer · Game Developer · Creative Technologist.
+Portafolio personal de **Alex DEV (SPACE DEV)**: Full Stack Developer.
 
-Sitio de una sola página con un concepto visual **"Cosmos + Código"**: hero 3D, constelaciones de stack interactivas, proyectos filtrables y soporte bilingüe (ES/EN).
+Sitio de una sola página con un concepto visual **"Cosmos + Código"**: hero 3D orbital como fondo ambiental, constelaciones de stack interactivas (con navegación por arrastre), proyectos filtrables y soporte bilingüe (ES/EN).
+
+Versión actual: **v1.0.0** (ver `docs/iteracion-v1.0.0-portfolio-alex-dev.md`).
 
 ## Stack
 
-Sitio **estático puro**, sin paso de build. El JSX se transpila directamente en el navegador con Babel standalone.
-
-- **HTML + CSS** plano (`index.html`, `css/styles.css`)
-- **React 18** (UMD, vía CDN)
-- **Babel Standalone** — transpila los `.jsx` en el navegador
-- **Three.js** — fondo / hero 3D
-- Datos e i18n en `js/data.js`
-
-> No hay `package.json` ni `npm install`: todas las dependencias se cargan por CDN.
+- **Astro 5** — framework base (SSG + islands)
+- **React 18** — toda la UI interactiva vive en una isla (`client:only`)
+- **Three.js** — sistema orbital 3D del hero
+- **CSS** plano (`src/styles/global.css`) con custom properties
 
 ## Ejecutar en local
 
-Como los archivos `.jsx` se cargan vía `src=`, **no funciona** abrir `index.html` con doble clic (el navegador lo bloquea por CORS con `file://`). Necesitas un servidor estático:
-
 ```bash
-# Opción 1 — Python
-python -m http.server 8000
-
-# Opción 2 — Node
-npx serve
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # build de producción en dist/
+npm run preview  # sirve el build
 ```
-
-Luego abre **http://localhost:8000** (o el puerto que indique `serve`).
-
-En VS Code también puedes usar la extensión **Live Server** (click derecho en `index.html` → *Open with Live Server*).
 
 ## Estructura
 
 ```
 portafolio/
-├── index.html              # Punto de entrada, carga scripts y estilos
-├── css/
-│   └── styles.css          # Estilos globales
-├── js/
-│   ├── data.js             # Contenido + i18n (ES/EN)
-│   ├── app.jsx             # Raíz de la app React
-│   ├── hero3d.jsx          # Hero / fondo 3D (Three.js)
-│   ├── constellation.jsx   # Constelaciones de stack interactivas
-│   ├── sections.jsx        # Secciones del portafolio
-│   ├── ui.jsx              # Componentes de UI reutilizables
-│   ├── contact-footer.jsx  # Contacto y pie de página
-│   └── tweaks-panel.jsx    # Panel de ajustes en vivo
+├── astro.config.mjs
+├── src/
+│   ├── pages/
+│   │   └── index.astro          # Página única; monta la isla React
+│   ├── styles/
+│   │   └── global.css           # Estilos globales (paleta cosmos)
+│   ├── data/
+│   │   ├── site.js              # Config: status, logo, fuente, cursor
+│   │   ├── i18n.js              # Textos ES/EN
+│   │   ├── skills.js            # Constelación (estrellas + conexiones)
+│   │   ├── projects.js          # Proyectos
+│   │   ├── experience.js        # Timeline de experiencia
+│   │   └── planets.js           # Planetas del hero 3D
+│   └── components/
+│       ├── App.jsx              # Raíz de la isla React
+│       ├── Ui.jsx               # Hooks, boot, cursor, header, hero, sobre mí
+│       ├── Hero3D.jsx           # Sistema orbital (Three.js)
+│       ├── Constellation.jsx    # Constelación de habilidades (canvas 2D)
+│       ├── Sections.jsx         # Habilidades, proyectos, modal, experiencia, proceso
+│       └── ContactFooter.jsx    # Contacto y footer
 └── docs/
-    └── portafolio-diseno-v2.md  # Notas de diseño
+    ├── portafolio-diseno-v2.md              # Documento de diseño original
+    └── iteracion-v1.0.0-portfolio-alex-dev.md  # Cambios de la iteración v1.0.0
 ```
+
+## Pendientes (puntos abiertos)
+
+- **Integración con Supabase:** definir alcance (¿formulario de contacto?, ¿panel privado?, ¿gestión de proyectos?). Aún por discutir. El indicador de status del header se controla por ahora en `src/data/site.js`.
+- **Formulario de contacto:** conectar Web3Forms (hoy simula el envío). Email, GitHub, LinkedIn y CV apuntan a placeholders.
+- **Sección de habilidades de diseño:** subsección con enlace a Behance, por definir ubicación dentro de la página.
+- **Lista de proyectos:** ampliar con nuevos proyectos en próximas iteraciones.
+- **Repositorios / código fuente de cada proyecto:** falta pasar los enlaces al código para conectarlos con el botón "Ver código" de las cards (campo `github` en `src/data/projects.js`; el botón se muestra solo cuando hay URL).
+- **Detalle expandido por proyecto:** vista ampliada con descripción larga, stack completo (incluyendo tecnologías implícitas como VSCode/Git), capturas y enlaces. El modal ya omite los bloques sin contenido (`challenge`, `solution`, `gallery`, `result` en `projects.js`).
+- **Constelación de stack:** revisar qué tecnologías desactivar/ocultar mientras no estén respaldadas por un proyecto. No eliminarlas del código (flag `enabled` en `src/data/skills.js`).
+- **Métricas del "Sobre Mí":** calcular y fijar `Proyectos completados` y `Tecnologías dominadas` cuando la lista esté cerrada (hoy son placeholders 24+ / 15+).
+- **Sección de experiencia:** ampliar con entradas entre 2022 y 2026.
+- **Logo definitivo:** reemplazar provisional `[AE]` cuando esté listo el branding final.
+- **Imágenes:** capturas reales de proyectos y foto/avatar de "Sobre mí" (hoy placeholders rayados).
 
 ## Autor
 
-**Alex Enriquez Vera** — SPACE DEV
+**Alex DEV** — SPACE DEV

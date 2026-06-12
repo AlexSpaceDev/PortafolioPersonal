@@ -1,13 +1,21 @@
 /* ============================================================
    Hero 3D — Sistema orbital de tecnologías (Three.js)
    Núcleo con glow gravitacional + planetas orbitando + starfield.
+   v1.0.0: capa de fondo ambiental a ancho completo del hero.
+   El sistema se escala y desplaza dinámicamente para llegar
+   hasta el borde derecho del viewport SIN recortarse.
    ============================================================ */
+
+import React from 'react';
+import * as THREE from 'three';
+import { HERO_PLANETS } from '../data/planets.js';
 
 const CAT_COLORS = {
   web: 0x5aa3d9,
   apps: 0x8ec5e8,
   games: 0xf4b860,
   xr: 0xd9a3f0,
+  backend: 0x7fd4b8,
   tools: 0xa7b0c0
 };
 
@@ -24,17 +32,18 @@ function makeGlowTexture(inner, outer) {
   return new THREE.CanvasTexture(c);
 }
 
-function Hero3D({ lang, onPlanetClick, reducedMotion }) {
+export function Hero3D({ lang, onPlanetClick, reducedMotion }) {
   const wrapRef = React.useRef(null);
   const [tooltip, setTooltip] = React.useState(null); // {x, y, name, cat}
   const stateRef = React.useRef({});
 
   React.useEffect(() => {
     const wrap = wrapRef.current;
-    if (!wrap || typeof THREE === 'undefined') return;
+    if (!wrap) return;
 
     const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-    const planets = isMobile ? window.HERO_PLANETS.slice(0, 5) : window.HERO_PLANETS;
+    const planets = isMobile ? HERO_PLANETS.slice(0, 5) : HERO_PLANETS;
+    const maxRadius = Math.max(...planets.map((p) => p.radius));
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
@@ -157,6 +166,14 @@ function Hero3D({ lang, onPlanetClick, reducedMotion }) {
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+
+      // Encaje sin recortes: el sistema se escala según el ancho
+      // visible y se desplaza para tocar el borde derecho.
+      const halfH = Math.tan((camera.fov * Math.PI) / 360) * camera.position.z;
+      const halfW = halfH * camera.aspect;
+      const fitScale = Math.min(1, (halfW * (isMobile ? 0.92 : 0.62)) / maxRadius);
+      system.scale.setScalar(fitScale);
+      system.position.x = isMobile ? 0 : Math.max(0, halfW * 0.98 - maxRadius * fitScale);
     }
     resize();
     const ro = new ResizeObserver(resize);
@@ -277,6 +294,7 @@ function Hero3D({ lang, onPlanetClick, reducedMotion }) {
     apps: { es: 'Apps', en: 'Apps' },
     games: { es: 'Videojuegos', en: 'Games' },
     xr: { es: 'VR/AR', en: 'VR/AR' },
+    backend: { es: 'Backend', en: 'Backend' },
     tools: { es: 'Herramientas', en: 'Tools' }
   };
 
@@ -291,5 +309,3 @@ function Hero3D({ lang, onPlanetClick, reducedMotion }) {
     </div>
   );
 }
-
-window.Hero3D = Hero3D;

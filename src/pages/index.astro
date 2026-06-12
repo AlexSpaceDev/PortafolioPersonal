@@ -1,0 +1,27 @@
+---
+import '../styles/global.css';
+import App from '../components/App.jsx';
+---
+
+<!doctype html>
+<html lang="es" data-font="geist">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ALEX DEV — Full Stack Developer</title>
+    <meta
+      name="description"
+      content="Portafolio de ALEX DEV (SPACE DEV): desarrollo web, apps, videojuegos y consultoría técnica. Cosmos + Código."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <App client:only="react" />
+  </body>
+</html>

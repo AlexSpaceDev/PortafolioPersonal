@@ -1,13 +1,22 @@
 /* ============================================================
-   App principal — Portafolio Alex Enriquez Vera
+   App principal — Portafolio ALEX DEV
+   Isla React (client:only) montada desde src/pages/index.astro.
+   La configuración (status, logo, fuente, cursor) vive en
+   src/data/site.js — antes era el panel de tweaks del prototipo.
    ============================================================ */
 
-const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "status": "available",
-  "fontPair": "geist",
-  "logoStyle": "ae",
-  "customCursor": true
-}/*EDITMODE-END*/;
+import React from 'react';
+import { SITE } from '../data/site.js';
+import { I18N } from '../data/i18n.js';
+import { SKILLS } from '../data/skills.js';
+import { PROJECTS } from '../data/projects.js';
+import {
+  useReducedMotion, BootSequence, CustomCursor, Header, Hero, About, NAV_IDS
+} from './Ui.jsx';
+import {
+  SkillsSection, ProjectsSection, CaseStudyModal, ExperienceSection, ProcessSection
+} from './Sections.jsx';
+import { ContactSection, Footer } from './ContactFooter.jsx';
 
 /* Starfield estático de fondo (muy sutil, no animado) */
 function StaticStarfield() {
@@ -43,8 +52,7 @@ function StaticStarfield() {
   return <canvas id="starfield-bg" ref={ref} aria-hidden="true"></canvas>;
 }
 
-function App() {
-  const [tw, setTweak] = useTweaks(TWEAK_DEFAULTS);
+export default function App() {
   const reducedMotion = useReducedMotion();
 
   // ----- Idioma -----
@@ -60,10 +68,10 @@ function App() {
   };
   React.useEffect(() => { document.documentElement.lang = lang; }, []);
 
-  // ----- Tipografía (tweak) -----
+  // ----- Tipografía -----
   React.useEffect(() => {
-    document.documentElement.setAttribute('data-font', tw.fontPair === 'inter' ? 'inter' : 'geist');
-  }, [tw.fontPair]);
+    document.documentElement.setAttribute('data-font', SITE.fontPair === 'inter' ? 'inter' : 'geist');
+  }, []);
 
   // ----- Filtros -----
   const [skillFilter, setSkillFilter] = React.useState('all');
@@ -73,15 +81,12 @@ function App() {
   // ----- Modal -----
   const [openProject, setOpenProject] = React.useState(null);
 
-  // ----- Boot replay (tweak button) -----
-  const [bootToken, setBootToken] = React.useState(0);
-
   // ----- Sección activa -----
   const [activeSection, setActiveSection] = React.useState('inicio');
   React.useEffect(() => {
     function onScroll() {
       let current = 'inicio';
-      window.NAV_IDS.forEach((id) => {
+      NAV_IDS.forEach((id) => {
         const el = document.getElementById(id);
         if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.4) current = id;
       });
@@ -95,7 +100,7 @@ function App() {
   // ----- Hash directo a case study (#proyecto-id) -----
   React.useEffect(() => {
     const m = window.location.hash.match(/^#proyecto-(.+)$/);
-    if (m && window.PROJECTS.some((p) => p.id === m[1])) setOpenProject(m[1]);
+    if (m && PROJECTS.some((p) => p.id === m[1])) setOpenProject(m[1]);
   }, []);
 
   const scrollTo = (id) => {
@@ -112,32 +117,31 @@ function App() {
 
   // click en planeta del hero → destaca en habilidades
   const onPlanetClick = (techId) => {
-    const star = window.SKILLS.find((s) => s.id === techId);
+    const star = SKILLS.find((s) => s.id === techId);
     if (star) setSkillFilter(star.cat);
     scrollTo('habilidades');
   };
 
-  // navegación entre case studies (dentro del filtro activo)
+  // navegación entre case studies
   const navigateProject = (dir) => {
-    const list = window.PROJECTS;
-    const idx = list.findIndex((p) => p.id === openProject);
+    const idx = PROJECTS.findIndex((p) => p.id === openProject);
     if (idx === -1) return;
-    const next = (idx + dir + list.length) % list.length;
-    setOpenProject(list[next].id);
+    const next = (idx + dir + PROJECTS.length) % PROJECTS.length;
+    setOpenProject(PROJECTS[next].id);
   };
 
-  const t = window.I18N[lang];
+  const t = I18N[lang];
 
   return (
     <React.Fragment>
       <a className="skip-link" href="#sobre">{t.skipLink}</a>
       <div className="nebula-bg" aria-hidden="true"></div>
       <StaticStarfield />
-      <BootSequence lang={lang} replayToken={bootToken} onDone={() => {}} />
-      <CustomCursor enabled={tw.customCursor} />
-      <Header lang={lang} setLang={setLang} status={tw.status} activeSection={activeSection} logoStyle={tw.logoStyle} />
+      <BootSequence lang={lang} onDone={() => {}} />
+      <CustomCursor enabled={SITE.customCursor} />
+      <Header lang={lang} setLang={setLang} status={SITE.status} activeSection={activeSection} logoStyle={SITE.logoStyle} />
       <main id="main">
-        <Hero lang={lang} status={tw.status} onPlanetClick={onPlanetClick} reducedMotion={reducedMotion} />
+        <Hero lang={lang} status={SITE.status} onPlanetClick={onPlanetClick} reducedMotion={reducedMotion} />
         <About lang={lang} />
         <SkillsSection lang={lang} filter={skillFilter} setFilter={setSkillFilter} onStarClick={onStarClick} reducedMotion={reducedMotion} />
         <ProjectsSection
@@ -161,44 +165,6 @@ function App() {
           onNavigate={navigateProject}
         />
       )}
-
-      <TweaksPanel>
-        <TweakSection label={lang === 'es' ? 'Identidad' : 'Identity'} />
-        <TweakRadio
-          label="Logo"
-          value={tw.logoStyle}
-          options={[{ value: 'ae', label: '[AE]' }, { value: 'nombre', label: 'Alex_Enriquez' }]}
-          onChange={(v) => setTweak('logoStyle', v)}
-        />
-        <TweakRadio
-          label={lang === 'es' ? 'Tipografía' : 'Typography'}
-          value={tw.fontPair}
-          options={[{ value: 'geist', label: 'Geist' }, { value: 'inter', label: 'Inter + JB Mono' }]}
-          onChange={(v) => setTweak('fontPair', v)}
-        />
-        <TweakSection label={lang === 'es' ? 'Comportamiento' : 'Behavior'} />
-        <TweakSelect
-          label="Status"
-          value={tw.status}
-          options={[
-            { value: 'available', label: lang === 'es' ? 'Disponible' : 'Available' },
-            { value: 'limited', label: lang === 'es' ? 'Capacidad limitada' : 'Limited capacity' },
-            { value: 'closed', label: lang === 'es' ? 'No tomando proyectos' : 'Not taking projects' }
-          ]}
-          onChange={(v) => setTweak('status', v)}
-        />
-        <TweakToggle
-          label={lang === 'es' ? 'Cursor custom' : 'Custom cursor'}
-          value={tw.customCursor}
-          onChange={(v) => setTweak('customCursor', v)}
-        />
-        <TweakButton
-          label={lang === 'es' ? 'Repetir boot sequence' : 'Replay boot sequence'}
-          onClick={() => setBootToken((n) => n + 1)}
-        />
-      </TweaksPanel>
     </React.Fragment>
   );
 }
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);

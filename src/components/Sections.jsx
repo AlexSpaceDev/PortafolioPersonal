@@ -1,16 +1,27 @@
 /* ============================================================
    Secciones: Habilidades, Proyectos (+modal), Experiencia,
-   Proceso, Contacto, Footer
+   Proceso.
+   v1.0.0: el modal omite los bloques de case study sin contenido
+   (reto/solución/galería/resultado llegan con el detalle
+   expandido en una iteración futura). "Ver código" se oculta
+   mientras no haya repositorios (github: null).
    ============================================================ */
 
-const FILTER_KEYS = ['all', 'web', 'apps', 'games', 'xr'];
+import React from 'react';
+import { I18N } from '../data/i18n.js';
+import { PROJECTS } from '../data/projects.js';
+import { EXPERIENCE } from '../data/experience.js';
+import { useReveal } from './Ui.jsx';
+import { Constellation } from './Constellation.jsx';
+
+export const FILTER_KEYS = ['all', 'web', 'apps', 'games', 'xr'];
 
 /* ---------- Habilidades ---------- */
-function SkillsSection({ lang, filter, setFilter, onStarClick, reducedMotion }) {
-  const t = window.I18N[lang];
+export function SkillsSection({ lang, filter, setFilter, onStarClick, reducedMotion }) {
+  const t = I18N[lang];
   const ref = useReveal();
   return (
-    <section className="site-section" id="habilidades" ref={ref} data-screen-label="Habilidades">
+    <section className="site-section" id="habilidades" ref={ref}>
       <span className="section-label">{t.skills.label}</span>
       <h2 className="section-title">{t.skills.title}</h2>
       <p style={{ color: 'var(--text-1)', maxWidth: '58ch', textWrap: 'pretty' }}>{t.skills.desc}</p>
@@ -27,8 +38,8 @@ function SkillsSection({ lang, filter, setFilter, onStarClick, reducedMotion }) 
 }
 
 /* ---------- Card de proyecto ---------- */
-function ProjectCard({ project, lang, index, onOpen }) {
-  const t = window.I18N[lang];
+export function ProjectCard({ project, lang, index, onOpen }) {
+  const t = I18N[lang];
   const c = project[lang];
   const catName = t.filters[project.cat];
   const cardRef = React.useRef(null);
@@ -78,8 +89,16 @@ function ProjectCard({ project, lang, index, onOpen }) {
           <button className="project-link" onClick={(e) => { e.stopPropagation(); onOpen(project.id); }}>
             {t.projects.details} →
           </button>
+          {/* "Ver código": oculto hasta tener los repositorios (ver README) */}
           {project.github && (
-            <a className="project-link" href="#" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} aria-label={t.projects.code + ' — ' + c.title}>
+            <a
+              className="project-link"
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              aria-label={t.projects.code + ' — ' + c.title}
+            >
               {t.projects.code} ↗
             </a>
           )}
@@ -90,19 +109,19 @@ function ProjectCard({ project, lang, index, onOpen }) {
 }
 
 /* ---------- Sección de proyectos ---------- */
-function ProjectsSection({ lang, filter, setFilter, techFilter, clearTechFilter, onOpen }) {
-  const t = window.I18N[lang];
+export function ProjectsSection({ lang, filter, setFilter, techFilter, clearTechFilter, onOpen }) {
+  const t = I18N[lang];
   const ref = useReveal();
   const [expanded, setExpanded] = React.useState(false);
 
-  let list = window.PROJECTS.filter((p) => filter === 'all' || p.cat === filter);
+  let list = PROJECTS.filter((p) => filter === 'all' || p.cat === filter);
   if (techFilter) list = list.filter((p) => p.tech.includes(techFilter.id));
   const visible = expanded ? list : list.slice(0, 4);
 
   React.useEffect(() => { setExpanded(false); }, [filter, techFilter]);
 
   return (
-    <section className="site-section" id="proyectos" ref={ref} data-screen-label="Proyectos">
+    <section className="site-section" id="proyectos" ref={ref}>
       <span className="section-label">{t.projects.label}</span>
       <h2 className="section-title">{t.projects.title}</h2>
       {techFilter && (
@@ -139,10 +158,10 @@ function ProjectsSection({ lang, filter, setFilter, techFilter, clearTechFilter,
 }
 
 /* ---------- Modal case study ---------- */
-function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
-  const t = window.I18N[lang].modal;
+export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
+  const t = I18N[lang].modal;
   const closeRef = React.useRef(null);
-  const project = window.PROJECTS.find((p) => p.id === projectId);
+  const project = PROJECTS.find((p) => p.id === projectId);
 
   React.useEffect(() => {
     if (!project) return;
@@ -166,7 +185,7 @@ function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
 
   if (!project) return null;
   const c = project[lang];
-  const catName = window.I18N[lang].filters[project.cat];
+  const catName = I18N[lang].filters[project.cat];
 
   return (
     <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -175,7 +194,7 @@ function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
           <button className="modal-nav-btn" onClick={() => onNavigate(-1)} aria-label={t.prev}>←</button>
           <div style={{ flex: 1, minWidth: 0 }}>
             <h3 className="modal-title">{c.title}</h3>
-            <span className="modal-meta">{catName} · {project.year}</span>
+            <span className="modal-meta">{catName}{project.year ? ' · ' + project.year : ''}</span>
           </div>
           <button className="modal-nav-btn" onClick={() => onNavigate(1)} aria-label={t.next}>→</button>
           <button className="modal-close" ref={closeRef} onClick={onClose} aria-label={t.close}>×</button>
@@ -184,32 +203,40 @@ function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
           <div className="modal-hero img-placeholder">
             <span className="ph-label">[ imagen principal — {c.title} ]</span>
           </div>
-          <div className="cs-block">
-            <h4>{t.summary}</h4>
-            <p>{c.summary}</p>
-          </div>
-          <div className="cs-block">
-            <h4>{t.challenge}</h4>
-            <p>{c.challenge}</p>
-          </div>
-          <div className="cs-block">
-            <h4>{t.solution}</h4>
-            <p>{c.solution}</p>
-          </div>
+          {c.summary && (
+            <div className="cs-block">
+              <h4>{t.summary}</h4>
+              <p>{c.summary}</p>
+            </div>
+          )}
+          {c.challenge && (
+            <div className="cs-block">
+              <h4>{t.challenge}</h4>
+              <p>{c.challenge}</p>
+            </div>
+          )}
+          {c.solution && (
+            <div className="cs-block">
+              <h4>{t.solution}</h4>
+              <p>{c.solution}</p>
+            </div>
+          )}
           <div className="cs-block">
             <h4>{t.stack}</h4>
             <div className="project-tech">
               {project.techLabels.map((tech) => <span className="badge-mono" key={tech}>{tech}</span>)}
             </div>
           </div>
-          <div className="cs-block">
-            <h4>{t.gallery}</h4>
-            <div className="cs-gallery">
-              <div className="img-placeholder"><span className="ph-label">[ captura 1 ]</span></div>
-              <div className="img-placeholder"><span className="ph-label">[ captura 2 ]</span></div>
-              <div className="img-placeholder"><span className="ph-label">[ captura 3 ]</span></div>
+          {c.gallery && (
+            <div className="cs-block">
+              <h4>{t.gallery}</h4>
+              <div className="cs-gallery">
+                {c.gallery.map((g, i) => (
+                  <div className="img-placeholder" key={i}><span className="ph-label">{g}</span></div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           {c.result && (
             <div className="cs-block">
               <h4>{t.result}</h4>
@@ -218,8 +245,12 @@ function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
           )}
           {(project.live || project.github) && (
             <div className="modal-footer-links">
-              {project.live && <a className="btn btn-primary" href="#" onClick={(e) => e.preventDefault()}>{t.live} ↗</a>}
-              {project.github && <a className="btn btn-outline" href="#" onClick={(e) => e.preventDefault()}>{t.github} ↗</a>}
+              {project.live && (
+                <a className="btn btn-primary" href={project.live} target="_blank" rel="noopener noreferrer">{t.live} ↗</a>
+              )}
+              {project.github && (
+                <a className="btn btn-outline" href={project.github} target="_blank" rel="noopener noreferrer">{t.github} ↗</a>
+              )}
             </div>
           )}
         </div>
@@ -229,8 +260,8 @@ function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
 }
 
 /* ---------- Experiencia ---------- */
-function ExperienceSection({ lang }) {
-  const t = window.I18N[lang].experience;
+export function ExperienceSection({ lang }) {
+  const t = I18N[lang].experience;
   const ref = useReveal();
   const tlRef = React.useRef(null);
   const [progress, setProgress] = React.useState(0);
@@ -259,12 +290,12 @@ function ExperienceSection({ lang }) {
   }, []);
 
   return (
-    <section className="site-section" id="experiencia" ref={ref} data-screen-label="Experiencia">
+    <section className="site-section" id="experiencia" ref={ref}>
       <span className="section-label">{t.label}</span>
       <h2 className="section-title">{t.title}</h2>
       <div className="timeline" ref={tlRef}>
         <div className="timeline-progress" style={{ height: progress + 'px' }}></div>
-        {window.EXPERIENCE.map((exp, i) => {
+        {EXPERIENCE.map((exp, i) => {
           const c = exp[lang];
           return (
             <div className={'timeline-item' + (i < litCount ? ' lit' : '')} key={i}>
@@ -274,9 +305,11 @@ function ExperienceSection({ lang }) {
                 <h3 className="timeline-role">{c.role}</h3>
                 <p className="timeline-org">{c.org}</p>
                 <p>{c.desc}</p>
-                <div className="project-tech">
-                  {exp.tech.map((tech) => <span className="badge-mono" key={tech}>{tech}</span>)}
-                </div>
+                {exp.tech.length > 0 && (
+                  <div className="project-tech">
+                    {exp.tech.map((tech) => <span className="badge-mono" key={tech}>{tech}</span>)}
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -287,11 +320,11 @@ function ExperienceSection({ lang }) {
 }
 
 /* ---------- Proceso ---------- */
-function ProcessSection({ lang }) {
-  const t = window.I18N[lang].process;
+export function ProcessSection({ lang }) {
+  const t = I18N[lang].process;
   const ref = useReveal();
   return (
-    <section className="site-section" id="proceso" ref={ref} data-screen-label="Proceso">
+    <section className="site-section" id="proceso" ref={ref}>
       <span className="section-label">{t.label}</span>
       <h2 className="section-title">{t.title}</h2>
       <div className="process-row">
@@ -308,8 +341,3 @@ function ProcessSection({ lang }) {
     </section>
   );
 }
-
-Object.assign(window, {
-  FILTER_KEYS, SkillsSection, ProjectCard, ProjectsSection,
-  CaseStudyModal, ExperienceSection, ProcessSection
-});

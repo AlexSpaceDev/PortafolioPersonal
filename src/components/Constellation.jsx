@@ -2,7 +2,16 @@
    Constelación interactiva de habilidades (canvas 2D)
    Estrellas = tecnologías; líneas = stacks. Filtro por categoría,
    hover con tooltip, click filtra proyectos.
+   v1.0.0:
+   - Espacio virtual más ancho que el contenedor: click sostenido
+     sobre el vacío + arrastre para navegar (pan horizontal).
+   - Estrellas con enabled:false no se renderizan (tecnologías
+     sin proyecto visible que las respalde).
    ============================================================ */
+
+import React from 'react';
+import { I18N } from '../data/i18n.js';
+import { SKILLS, SKILL_LINKS } from '../data/skills.js';
 
 const CONST_COLORS = {
   blue: '#5AA3D9',
@@ -12,13 +21,15 @@ const CONST_COLORS = {
   line: 'rgba(90,163,217,'
 };
 
-function Constellation({ lang, filter, onStarClick, reducedMotion }) {
+const VISIBLE = SKILLS.filter((s) => s.enabled);
+
+export function Constellation({ lang, filter, onStarClick, reducedMotion }) {
   const wrapRef = React.useRef(null);
   const canvasRef = React.useRef(null);
   const [tooltip, setTooltip] = React.useState(null);
-  const animRef = React.useRef({ stars: {}, hovered: null, raf: null, t: 0 });
+  const animRef = React.useRef({ stars: {}, hovered: null, raf: null, t: 0, pan: 0 });
 
-  const t9n = window.I18N[lang].skills;
+  const t9n = I18N[lang].skills;
 
   // alpha objetivo por estrella según filtro
   const targetAlpha = (star) => {
@@ -35,28 +46,34 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
     const isTouch = window.matchMedia('(pointer: coarse)').matches;
 
     // estado de animación por estrella
-    window.SKILLS.forEach((s) => {
+    VISIBLE.forEach((s) => {
       if (!A.stars[s.id]) A.stars[s.id] = { alpha: 1, scale: 1, twinkle: Math.random() * Math.PI * 2 };
     });
 
     let W = 0, H = 0, dpr = Math.min(window.devicePixelRatio, 2);
+    // ancho del espacio virtual navegable (mayor que el contenedor)
+    const virtW = () => Math.max(W * 1.45, 980);
+    const maxPan = () => Math.max(0, virtW() - W);
+    const clampPan = (v) => Math.min(maxPan(), Math.max(0, v));
+
     function resize() {
       W = wrap.clientWidth; H = wrap.clientHeight;
       canvas.width = W * dpr; canvas.height = H * dpr;
       canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      A.pan = clampPan(A.pan);
     }
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
 
     const pad = { x: 70, y: 56 };
-    const px = (s) => pad.x + s.x * (W - pad.x * 2);
+    const px = (s) => pad.x + s.x * (virtW() - pad.x * 2) - A.pan;
     const py = (s) => pad.y + s.y * (H - pad.y * 2);
 
     function starAt(mx, my) {
       let best = null, bestD = 28;
-      window.SKILLS.forEach((s) => {
+      VISIBLE.forEach((s) => {
         const d = Math.hypot(px(s) - mx, py(s) - my);
         if (d < bestD) { best = s; bestD = d; }
       });
@@ -66,28 +83,60 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
     function showTooltip(s) {
       if (!s) { setTooltip(null); return; }
       const n = s.projects;
-      const catLabels = window.I18N[lang].filters;
-      const catKey = { web: 'web', apps: 'apps', games: 'games', xr: 'xr', tools: 'tools' }[s.cat];
+      const catLabels = I18N[lang].filters;
       setTooltip({
         x: px(s), y: py(s) - 14 * s.size,
         name: s.name,
-        meta: `${catLabels[catKey]} · ${n} ${n === 1 ? t9n.project : t9n.projects}`
+        meta: `${catLabels[s.cat] || s.cat} · ${n} ${n === 1 ? t9n.project : t9n.projects}`
       });
     }
 
+    function setIdleCursor(star) {
+      canvas.style.cursor = star ? 'pointer' : 'grab';
+    }
+
+    // --- Pan con click sostenido sobre el vacío ---
+    let panning = false, panMoved = false, panStartX = 0, panStartVal = 0;
+
+    function onPointerDown(e) {
+      const r = canvas.getBoundingClientRect();
+      const s = starAt(e.clientX - r.left, e.clientY - r.top);
+      if (s) return; // sobre una estrella: el click filtra, no panea
+      panning = true; panMoved = false;
+      panStartX = e.clientX; panStartVal = A.pan;
+      canvas.setPointerCapture(e.pointerId);
+      canvas.style.cursor = 'grabbing';
+      setTooltip(null);
+    }
+    function onPointerMove(e) {
+      if (!panning) return;
+      const dx = e.clientX - panStartX;
+      if (Math.abs(dx) > 4) panMoved = true;
+      A.pan = clampPan(panStartVal - dx);
+    }
+    function onPointerUp(e) {
+      if (!panning) return;
+      panning = false;
+      try { canvas.releasePointerCapture(e.pointerId); } catch (err) {}
+      const r = canvas.getBoundingClientRect();
+      setIdleCursor(starAt(e.clientX - r.left, e.clientY - r.top));
+    }
+
     function onMove(e) {
+      if (panning) return;
       const r = canvas.getBoundingClientRect();
       const s = starAt(e.clientX - r.left, e.clientY - r.top);
       if (s !== A.hovered) {
         A.hovered = s;
-        canvas.style.cursor = s ? 'pointer' : '';
+        setIdleCursor(s);
         showTooltip(s);
       } else if (s) {
-        showTooltip(s); // reposicionar si hubo resize
+        showTooltip(s); // reposicionar si hubo resize/pan
       }
     }
     function onLeave() { A.hovered = null; setTooltip(null); canvas.style.cursor = ''; }
     function onClick(e) {
+      if (panMoved) { panMoved = false; return; } // fue un arrastre, no un click
       const r = canvas.getBoundingClientRect();
       const s = starAt(e.clientX - r.left, e.clientY - r.top);
       if (!s) { if (isTouch) onLeave(); return; }
@@ -99,6 +148,12 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
       }
       onStarClick && onStarClick(s);
     }
+    canvas.style.touchAction = 'pan-y';
+    canvas.style.cursor = 'grab';
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerUp);
     canvas.addEventListener('mousemove', onMove);
     canvas.addEventListener('mouseleave', onLeave);
     canvas.addEventListener('click', onClick);
@@ -107,7 +162,7 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
     const io = new IntersectionObserver(([en]) => { running = en.isIntersecting; });
     io.observe(wrap);
 
-    const linkedTo = (id) => window.SKILL_LINKS
+    const linkedTo = (id) => SKILL_LINKS
       .filter((l) => l[0] === id || l[1] === id)
       .map((l) => (l[0] === id ? l[1] : l[0]));
 
@@ -118,10 +173,10 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
       ctx.clearRect(0, 0, W, H);
 
       const byId = {};
-      window.SKILLS.forEach((s) => { byId[s.id] = s; });
+      VISIBLE.forEach((s) => { byId[s.id] = s; });
 
       // interpolar alphas / escalas
-      window.SKILLS.forEach((s) => {
+      VISIBLE.forEach((s) => {
         const st = A.stars[s.id];
         const tA = targetAlpha(s) * (A.hovered && A.hovered !== s && !linkedTo(A.hovered.id).includes(s.id) ? 0.55 : 1);
         st.alpha += (tA - st.alpha) * 0.08;
@@ -129,8 +184,8 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
         st.scale += (tS - st.scale) * 0.15;
       });
 
-      // líneas de conexión
-      window.SKILL_LINKS.forEach(([a, b]) => {
+      // líneas de conexión (solo entre estrellas habilitadas)
+      SKILL_LINKS.forEach(([a, b]) => {
         const sa = byId[a], sb = byId[b];
         if (!sa || !sb) return;
         const stA = A.stars[a], stB = A.stars[b];
@@ -147,9 +202,10 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
       });
 
       // estrellas
-      window.SKILLS.forEach((s) => {
+      VISIBLE.forEach((s) => {
         const st = A.stars[s.id];
         const x = px(s), y = py(s);
+        if (x < -80 || x > W + 80) return; // fuera del encuadre actual
         const tw = reducedMotion ? 1 : 0.85 + Math.sin(A.t * 1.3 + st.twinkle) * 0.15;
         const R = 4.2 * s.size * st.scale;
         const isGold = s.main;
@@ -196,6 +252,10 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
       cancelAnimationFrame(A.raf);
       ro.disconnect();
       io.disconnect();
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('pointermove', onPointerMove);
+      canvas.removeEventListener('pointerup', onPointerUp);
+      canvas.removeEventListener('pointercancel', onPointerUp);
       canvas.removeEventListener('mousemove', onMove);
       canvas.removeEventListener('mouseleave', onLeave);
       canvas.removeEventListener('click', onClick);
@@ -215,5 +275,3 @@ function Constellation({ lang, filter, onStarClick, reducedMotion }) {
     </div>
   );
 }
-
-window.Constellation = Constellation;
