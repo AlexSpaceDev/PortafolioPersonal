@@ -18,7 +18,7 @@ export const PROJECTS = [
   {
     id: 'club-exploradores',
     cats: ['web'],
-    tech: ['astro', 'react', 'tailwind', 'typescript'],
+    tech: ['astro', 'react', 'tailwind', 'typescript', 'vscode', 'git', 'github'],
     techLabels: ['Astro', 'React', 'Tailwind CSS', 'TypeScript'],
     live: 'https://clubdeexploradores.com/',
     github: null,
@@ -36,7 +36,7 @@ export const PROJECTS = [
   {
     id: 'rompamos-el-tabu',
     cats: ['web'],
-    tech: ['joomla', 'javascript', 'css'],
+    tech: ['joomla', 'javascript', 'css', 'vscode', 'git', 'github'],
     techLabels: ['Joomla', 'JavaScript', 'CSS'],
     live: 'https://rompamoseltabu.com/',
     github: null,
@@ -54,7 +54,7 @@ export const PROJECTS = [
   {
     id: 'space-dev',
     cats: ['web'],
-    tech: ['astro', 'react', 'tailwind', 'typescript'],
+    tech: ['astro', 'react', 'tailwind', 'typescript', 'vscode', 'git', 'github'],
     techLabels: ['Astro', 'React', 'Tailwind CSS', 'TypeScript'],
     live: 'https://spacedev.me',
     github: null,
@@ -72,7 +72,7 @@ export const PROJECTS = [
   {
     id: 'ponte-en-sus-patitas',
     cats: ['web'],
-    tech: ['joomla', 'javascript', 'css'],
+    tech: ['joomla', 'javascript', 'css', 'vscode', 'git', 'github'],
     techLabels: ['Joomla', 'JavaScript', 'CSS'],
     live: 'https://ponteensuspatitas.com/',
     github: null,
@@ -90,7 +90,7 @@ export const PROJECTS = [
   {
     id: 'trazando-pasos',
     cats: ['games'],
-    tech: ['unreal'],
+    tech: ['unreal', 'vscode', 'git', 'github'],
     techLabels: ['Unreal Engine'],
     live: 'https://www.behance.net/gallery/166470549/Trazando-Pasos-(videojuego-VR)-(2023)',
     github: null,
@@ -108,7 +108,7 @@ export const PROJECTS = [
   {
     id: 'plantain-feast',
     cats: ['games'],
-    tech: ['unreal'],
+    tech: ['unreal', 'vscode', 'git', 'github'],
     techLabels: ['Unreal Engine'],
     live: 'https://www.behance.net/gallery/166078851/Plantain-Feast',
     github: null,
@@ -126,7 +126,7 @@ export const PROJECTS = [
     {
     id: 'alfareria-metalurgia-ar',
     cats: ['games', 'xr'],
-    tech: ['unity', 'csharp'],
+    tech: ['unity', 'csharp', 'vscode', 'git', 'github'],
     techLabels: ['Unity', 'C#'],
     live: null,
     github: null,
@@ -144,7 +144,7 @@ export const PROJECTS = [
   {
     id: 'pets',
     cats: ['apps'],
-    tech: ['flutter', 'supabase'],
+    tech: ['flutter', 'supabase', 'vscode', 'git', 'github'],
     techLabels: ['Flutter', 'Supabase'],
     live: null, // proyecto en desarrollo
     github: null,
@@ -162,7 +162,7 @@ export const PROJECTS = [
   {
     id: 'alerta',
     cats: ['xr'],
-    tech: ['lensstudio', 'javascript'],
+    tech: ['lensstudio', 'javascript', 'vscode', 'git', 'github'],
     techLabels: ['Lens Studio', 'JavaScript'],
     live: 'https://www.expreso.ec/guayaquil/arte-interactivo-busca-sensibilizar-enos-salud-mental-213527.html',
     github: null,
@@ -180,7 +180,7 @@ export const PROJECTS = [
   {
     id: 'soldadura-vr',
     cats: ['xr'],
-    tech: ['unity', 'csharp', 'metaquest'],
+    tech: ['unity', 'csharp', 'metaquest', 'vscode', 'git', 'github'],
     techLabels: ['Unity', 'C#', 'Meta Quest 2'],
     live: null, // documentación privada / presentación del proyecto
     github: null,

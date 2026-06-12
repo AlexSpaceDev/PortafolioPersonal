@@ -17,7 +17,6 @@ export const I18N = {
       closed: 'No tomando proyectos por ahora'
     },
     hero: {
-      kicker: '// SOFTWARE DEVELOPER',
       title: 'ALEX DEV',
       subtitle: 'Full Stack Developer',
       desc: 'Diseño y construyo aplicaciones, sitios web y videojuegos donde la lógica del código se cruza con la curiosidad por explorar nuevas formas de crear.',
@@ -27,11 +26,11 @@ export const I18N = {
     about: {
       label: '// 01 SOBRE MÍ',
       title: 'Soy Alex DEV',
-      p1: 'Desarrollador full-stack multidisciplinario: aplicaciones web, móviles, videojuegos y consultoría técnica. Me muevo entre stacks con la misma disciplina, entendiendo primero el problema para luego elegir la herramienta más adecuada en cada caso.',
+      p1: '¿Qué tal? Soy **Alex Enriquez D. Vera (DEV)**, desarrollador full-stack multidisciplinario: aplicaciones web, móviles, videojuegos y consultoría técnica. Me muevo entre stacks entendiendo primero el problema, para luego elegir la herramienta más adecuada en cada caso.',
       p2: 'Prefiero proyectos donde el detalle importa: productos con identidad, experiencias interactivas y herramientas que la gente realmente usa. Trabajo de forma independiente, con comunicación directa y entregas visibles.',
       photoPh: '[ foto profesional / avatar ]',
       stats: [
-        { value: 24, suffix: '+', label: 'Proyectos completados' },
+        { value: 15, suffix: '+', label: 'Proyectos completados' },
         { value: 15, suffix: '+', label: 'Tecnologías dominadas' },
         { value: 5, suffix: '', label: 'Años de experiencia' },
         { value: 4, suffix: '', label: 'Áreas de especialización' }
@@ -40,8 +39,9 @@ export const I18N = {
     skills: {
       label: '// 02 HABILIDADES',
       title: 'Constelaciones de stack',
-      desc: 'Cada tecnología es una estrella. Las líneas conectan los stacks con los que construyo. Haz click en una estrella para filtrar los proyectos donde la uso, o arrastra el fondo para explorar.',
+      desc: 'Cada tipo de proyecto trae su propio **stack** y sus propias **herramientas**. Recorrerlos me ha enseñado a moverme entre entornos distintos y a elegir lo que mejor encaja con cada idea.',
       hint: 'arrastra para explorar · hover: detalle · click: filtrar',
+      moreFilters: 'Más filtros',
       projects: 'proyectos',
       project: 'proyecto'
     },
@@ -49,10 +49,13 @@ export const I18N = {
     projects: {
       label: '// 03 PROYECTOS',
       title: 'Nuestros Archivos',
+      intro: 'Aquí puedes echar un vistazo a los proyectos que he creado o en los que he participado — al menos los que **no son confidenciales**. Cada uno cuenta una historia distinta, con su propio stack y su propia razón de existir.',
       filteringBy: 'Filtrando por:',
-      seeMore: 'Ver más proyectos',
-      seeLess: 'Ver menos',
+      seeMore: 'Mostrar todo',
+      seeLess: 'Mostrar menos',
       details: 'Ver detalles',
+      visit: 'Visitar',
+      inProgress: 'En proceso',
       code: 'Ver código',
       empty: 'No hay proyectos en esta categoría todavía.'
     },
@@ -63,7 +66,7 @@ export const I18N = {
       stack: 'Stack técnico',
       gallery: 'Galería',
       result: 'Resultado',
-      live: 'Ver proyecto en vivo',
+      live: 'Visitar',
       github: 'Ver código en GitHub',
       close: 'Cerrar',
       prev: 'Proyecto anterior',
@@ -87,7 +90,7 @@ export const I18N = {
     contact: {
       label: '// 06 CONTACTO',
       title: 'Construyamos algo juntos.',
-      desc: 'Me interesan especialmente los proyectos web con identidad propia, las apps con propósito claro y las experiencias interactivas o de juego. Si tienes una idea, hablemos.',
+      desc: 'Si tienes un prototipo, un documento o apenas una idea, podemos aterrizarla, construirla y escalarla — ya sea una web, una app, una experiencia interactiva o tu propio videojuego. Solo escríbeme.',
       meta1: 'Respondo en menos de 24h (GMT-5)',
       meta2: 'Español e inglés',
       email: 'Email',
@@ -114,7 +117,7 @@ export const I18N = {
       social: 'Redes',
       copyright: '© 2026 — Todos los derechos reservados a Alex DEV',
       builtWith: 'Construido con Astro, React y mucho café',
-      version: 'v1.0.0'
+      version: 'v1.1.0'
     },
     boot: [
       'Inicializando sistema...',
@@ -139,7 +142,6 @@ export const I18N = {
       closed: 'Not taking projects right now'
     },
     hero: {
-      kicker: '// SOFTWARE DEVELOPER',
       title: 'ALEX DEV',
       subtitle: 'Full Stack Developer',
       desc: 'I design and build applications, websites and games where the logic of code meets the curiosity to explore new ways of creating.',
@@ -149,11 +151,11 @@ export const I18N = {
     about: {
       label: '// 01 ABOUT ME',
       title: "I'm Alex DEV",
-      p1: 'Multidisciplinary full-stack developer: web and mobile applications, games and technical consulting. I move between stacks with the same discipline, understanding the problem first and then choosing the most suitable tool for each case.',
+      p1: "Hi! I'm **Alex Enriquez D. Vera (DEV)**, a multidisciplinary full-stack developer: web and mobile applications, games and technical consulting. I move between stacks by understanding the problem first, then choosing the most suitable tool for each case.",
       p2: 'I prefer projects where detail matters: products with identity, interactive experiences and tools people actually use. I work independently, with direct communication and visible progress.',
       photoPh: '[ professional photo / avatar ]',
       stats: [
-        { value: 24, suffix: '+', label: 'Projects completed' },
+        { value: 15, suffix: '+', label: 'Projects completed' },
         { value: 15, suffix: '+', label: 'Technologies mastered' },
         { value: 5, suffix: '', label: 'Years of experience' },
         { value: 4, suffix: '', label: 'Areas of expertise' }
@@ -162,8 +164,9 @@ export const I18N = {
     skills: {
       label: '// 02 SKILLS',
       title: 'Stack constellations',
-      desc: 'Every technology is a star. Lines connect the stacks I build with. Click a star to filter the projects where I use it, or drag the background to explore.',
+      desc: 'Each type of project brings its own **stack** and its own **tools**. Moving across them has taught me to work in different environments and choose what fits each idea best.',
       hint: 'drag to explore · hover: details · click: filter',
+      moreFilters: 'More filters',
       projects: 'projects',
       project: 'project'
     },
@@ -171,10 +174,13 @@ export const I18N = {
     projects: {
       label: '// 03 PROJECTS',
       title: 'Our Archives',
+      intro: "Here you can take a look at the projects I've created or contributed to — at least the ones that **aren't confidential**. Each one tells a different story, with its own stack and its own reason to exist.",
       filteringBy: 'Filtering by:',
-      seeMore: 'See more projects',
-      seeLess: 'See less',
+      seeMore: 'Show all',
+      seeLess: 'Show less',
       details: 'View details',
+      visit: 'Visit',
+      inProgress: 'In progress',
       code: 'View code',
       empty: 'No projects in this category yet.'
     },
@@ -185,7 +191,7 @@ export const I18N = {
       stack: 'Tech stack',
       gallery: 'Gallery',
       result: 'Outcome',
-      live: 'View live project',
+      live: 'Visit',
       github: 'View code on GitHub',
       close: 'Close',
       prev: 'Previous project',
@@ -209,7 +215,7 @@ export const I18N = {
     contact: {
       label: '// 06 CONTACT',
       title: "Let's build something together.",
-      desc: 'I am especially drawn to web projects with their own identity, apps with a clear purpose, and interactive or game experiences. If you have an idea, let’s talk.',
+      desc: "If you have a prototype, a document or just an idea, we can shape it, build it and scale it — whether it's a website, an app, an interactive experience or your own game. Just write to me.",
       meta1: 'I reply within 24h (GMT-5)',
       meta2: 'Spanish & English',
       email: 'Email',
@@ -236,7 +242,7 @@ export const I18N = {
       social: 'Social',
       copyright: '© 2026 — All rights reserved to Alex DEV',
       builtWith: 'Built with Astro, React and a lot of coffee',
-      version: 'v1.0.0'
+      version: 'v1.1.0'
     },
     boot: [
       'Initializing system...',

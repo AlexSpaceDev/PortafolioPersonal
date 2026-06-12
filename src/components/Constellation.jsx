@@ -31,10 +31,13 @@ export function Constellation({ lang, filter, onStarClick, reducedMotion }) {
 
   const t9n = I18N[lang].skills;
 
+  // categorías de una estrella (cats opcional para multi-categoría)
+  const catsOf = (s) => s.cats || [s.cat];
+
   // alpha objetivo por estrella según filtro
   const targetAlpha = (star) => {
     if (filter === 'all') return 1;
-    return star.cat === filter ? 1 : 0.15;
+    return catsOf(star).includes(filter) ? 1 : 0.15;
   };
 
   React.useEffect(() => {
@@ -84,10 +87,11 @@ export function Constellation({ lang, filter, onStarClick, reducedMotion }) {
       if (!s) { setTooltip(null); return; }
       const n = s.projects;
       const catLabels = I18N[lang].filters;
+      const count = n > 0 ? ` · ${n} ${n === 1 ? t9n.project : t9n.projects}` : '';
       setTooltip({
         x: px(s), y: py(s) - 14 * s.size,
         name: s.name,
-        meta: `${catLabels[s.cat] || s.cat} · ${n} ${n === 1 ? t9n.project : t9n.projects}`
+        meta: `${catLabels[s.cat] || s.cat}${count}`
       });
     }
 
@@ -190,7 +194,7 @@ export function Constellation({ lang, filter, onStarClick, reducedMotion }) {
         if (!sa || !sb) return;
         const stA = A.stars[a], stB = A.stars[b];
         let alpha = Math.min(stA.alpha, stB.alpha) * 0.22;
-        if (filter !== 'all' && (sa.cat !== filter || sb.cat !== filter)) alpha *= 0.25;
+        if (filter !== 'all' && !(catsOf(sa).includes(filter) && catsOf(sb).includes(filter))) alpha *= 0.25;
         const isHL = A.hovered && (a === A.hovered.id || b === A.hovered.id);
         if (isHL) alpha = 0.65;
         ctx.strokeStyle = CONST_COLORS.line + alpha + ')';

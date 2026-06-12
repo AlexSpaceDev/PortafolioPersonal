@@ -502,6 +502,29 @@ section.site-section {
   box-shadow: 0 0 16px rgba(57, 129, 191, 0.18);
 }
 
+.projects-intro {
+  color: var(--text-1);
+  max-width: 58ch;
+  text-wrap: pretty;
+}
+
+/* Botón de filtros secundarios de la constelación (icono temporal) */
+.chip-more {
+  color: var(--gold);
+  border-color: rgba(244, 184, 96, 0.35);
+  padding: 8px 14px;
+}
+.chip-more:hover {
+  color: var(--gold);
+  border-color: rgba(244, 184, 96, 0.6);
+}
+.chip-more.active {
+  color: var(--gold);
+  border-color: rgba(244, 184, 96, 0.6);
+  background: rgba(244, 184, 96, 0.12);
+  box-shadow: 0 0 16px rgba(244, 184, 96, 0.15);
+}
+
 .tech-filter-pill {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--font-mono); font-size: 13px;
@@ -613,8 +636,19 @@ section.site-section {
 .project-tech { display: flex; gap: 7px; flex-wrap: wrap; }
 .project-footer {
   display: flex; gap: 18px;
+  align-items: center;
+  justify-content: space-between;
   margin-top: auto; padding-top: 14px;
   border-top: 1px solid var(--border-subtle);
+}
+/* Estado "En proceso" para proyectos sin URL pública */
+.project-status {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+  opacity: 0.75;
+  cursor: default;
+  white-space: nowrap;
 }
 .project-link {
   font-size: 14px; font-weight: 500;

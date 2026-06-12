@@ -1,32 +1,57 @@
 /* ============================================================
    Secciones: Habilidades, Proyectos (+modal), Experiencia,
    Proceso.
-   v1.0.0: el modal omite los bloques de case study sin contenido
-   (reto/solución/galería/resultado llegan con el detalle
-   expandido en una iteración futura). "Ver código" se oculta
-   mientras no haya repositorios (github: null).
+   v1.1.0: filtros secundarios en la constelación (Backend /
+   Diseño / Herramientas), vista inicial de proyectos con una
+   card por categoría principal, footer de card con "Visitar" /
+   "En proceso" y "Ver código" solo dentro del modal.
+   El modal omite los bloques de case study sin contenido.
    ============================================================ */
 
 import React from 'react';
 import { I18N } from '../data/i18n.js';
 import { PROJECTS } from '../data/projects.js';
 import { EXPERIENCE } from '../data/experience.js';
-import { useReveal } from './Ui.jsx';
+import { useReveal, Bold } from './Ui.jsx';
 import { Constellation } from './Constellation.jsx';
 
 export const FILTER_KEYS = ['all', 'web', 'apps', 'games', 'xr'];
+// Filtros secundarios de la constelación (se despliegan con el botón ✦)
+export const SECONDARY_FILTER_KEYS = ['backend', 'design', 'tools'];
 
 /* ---------- Habilidades ---------- */
 export function SkillsSection({ lang, filter, setFilter, onStarClick, reducedMotion }) {
   const t = I18N[lang];
   const ref = useReveal();
+  const [moreOpen, setMoreOpen] = React.useState(false);
+  const showSecondary = moreOpen || SECONDARY_FILTER_KEYS.includes(filter);
+
+  const toggleMore = () => {
+    // al cerrar con un filtro secundario activo, vuelve a "Todos"
+    if (showSecondary && SECONDARY_FILTER_KEYS.includes(filter)) setFilter('all');
+    setMoreOpen(!showSecondary);
+  };
+
   return (
     <section className="site-section" id="habilidades" ref={ref}>
       <span className="section-label">{t.skills.label}</span>
       <h2 className="section-title">{t.skills.title}</h2>
-      <p style={{ color: 'var(--text-1)', maxWidth: '58ch', textWrap: 'pretty' }}>{t.skills.desc}</p>
+      <p style={{ color: 'var(--text-1)', maxWidth: '58ch', textWrap: 'pretty' }}><Bold text={t.skills.desc} /></p>
       <div className="filter-row" role="group" aria-label="Filtros de habilidades">
         {FILTER_KEYS.map((k) => (
+          <button key={k} className={'chip' + (filter === k ? ' active' : '')} onClick={() => setFilter(k)}>
+            {t.filters[k]}
+          </button>
+        ))}
+        {/* Botón secundario (icono temporal — pendiente iconografía) */}
+        <button
+          className={'chip chip-more' + (showSecondary ? ' active' : '')}
+          onClick={toggleMore}
+          aria-label={t.skills.moreFilters}
+          aria-expanded={showSecondary}
+          title={t.skills.moreFilters}
+        >✦</button>
+        {showSecondary && SECONDARY_FILTER_KEYS.map((k) => (
           <button key={k} className={'chip' + (filter === k ? ' active' : '')} onClick={() => setFilter(k)}>
             {t.filters[k]}
           </button>
@@ -90,18 +115,20 @@ export function ProjectCard({ project, lang, index, onOpen }) {
           <button className="project-link" onClick={(e) => { e.stopPropagation(); onOpen(project.id); }}>
             {t.projects.details} →
           </button>
-          {/* "Ver código": oculto hasta tener los repositorios (ver README) */}
-          {project.github && (
+          {/* "Ver código" vive ahora dentro del modal de detalle */}
+          {project.live ? (
             <a
               className="project-link"
-              href={project.github}
+              href={project.live}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              aria-label={t.projects.code + ' — ' + c.title}
+              aria-label={t.projects.visit + ' — ' + c.title}
             >
-              {t.projects.code} ↗
+              {t.projects.visit} ↗
             </a>
+          ) : (
+            <span className="project-status">{t.projects.inProgress}</span>
           )}
         </div>
       </div>
@@ -117,7 +144,21 @@ export function ProjectsSection({ lang, filter, setFilter, techFilter, clearTech
 
   let list = PROJECTS.filter((p) => filter === 'all' || p.cats.includes(filter));
   if (techFilter) list = list.filter((p) => p.tech.includes(techFilter.id));
-  const visible = expanded ? list : list.slice(0, 4);
+
+  // Vista inicial en "Todos": una card de cada categoría principal
+  // (web, apps, games, xr) para transmitir la diversidad del trabajo.
+  let visible;
+  if (!expanded && filter === 'all' && !techFilter) {
+    const picks = [];
+    FILTER_KEYS.slice(1).forEach((cat) => {
+      const p = list.find((x) => x.cats.includes(cat) && !picks.includes(x));
+      if (p) picks.push(p);
+    });
+    list.forEach((p) => { if (picks.length < 4 && !picks.includes(p)) picks.push(p); });
+    visible = picks;
+  } else {
+    visible = expanded ? list : list.slice(0, 4);
+  }
 
   React.useEffect(() => { setExpanded(false); }, [filter, techFilter]);
 
@@ -125,6 +166,7 @@ export function ProjectsSection({ lang, filter, setFilter, techFilter, clearTech
     <section className="site-section" id="proyectos" ref={ref}>
       <span className="section-label">{t.projects.label}</span>
       <h2 className="section-title">{t.projects.title}</h2>
+      <p className="projects-intro"><Bold text={t.projects.intro} /></p>
       {techFilter && (
         <div className="tech-filter-pill">
           <span>{t.projects.filteringBy} {techFilter.name}</span>

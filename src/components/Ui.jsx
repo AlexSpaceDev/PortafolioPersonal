@@ -36,6 +36,11 @@ export function useReducedMotion() {
   return rm;
 }
 
+/* Renderiza texto de i18n con énfasis **negrita** sin usar HTML crudo */
+export function Bold({ text }) {
+  return text.split('**').map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part));
+}
+
 /* ---------- Boot sequence (primera visita) ---------- */
 export function BootSequence({ lang, onDone }) {
   const [visible, setVisible] = React.useState(false);
@@ -239,7 +244,6 @@ export function Hero({ lang, status, onPlanetClick, reducedMotion }) {
           <span className="status-dot" style={{ background: meta.color, '--dot-glow': meta.glow }}></span>
           <span>{t.heroBadge[status]}</span>
         </div>
-        <p className="hero-kicker">{t.hero.kicker}</p>
         <h1 className="hero-title">{t.hero.title}</h1>
         <p className="hero-subtitle">{t.hero.subtitle}</p>
         <p className="hero-desc">{t.hero.desc}</p>
@@ -307,7 +311,7 @@ export function About({ lang }) {
         <div className="about-text">
           <span className="section-label">{t.label}</span>
           <h2 className="section-title">{t.title}</h2>
-          <p>{t.p1}</p>
+          <p><Bold text={t.p1} /></p>
           <p>{t.p2}</p>
           <div className="stats-row">
             {t.stats.map((s, i) => (
