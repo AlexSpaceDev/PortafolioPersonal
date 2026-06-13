@@ -2,15 +2,17 @@
 
 Portafolio personal de **Alex DEV (SPACE DEV)**: Full Stack Developer.
 
-Sitio de una sola página con un concepto visual **"Cosmos + Código"**: hero 3D orbital como fondo ambiental, constelaciones de stack interactivas (con navegación por arrastre), proyectos filtrables y soporte bilingüe (ES/EN).
+Sitio de una sola página con un concepto visual **"Cosmos + Código"**: hero 3D orbital como fondo ambiental, constelaciones de stack interactivas (con navegación por arrastre), proyectos filtrables con modal de detalle, y soporte bilingüe (ES/EN).
 
-Versión actual: **v1.1.0** (ver `docs/iteracion-v1.1.0-portfolio-alex-dev.md`).
+> **Estado:** producto **en desarrollo (pre-1.0)** — `package.json` en `0.3.0`. El tag `v1.0` se reserva para cuando esté terminado y publicado. Las `iteración vX.Y.Z` en `docs/` son etiquetas de **plan de trabajo**, no la versión del producto.
 
 ## Stack
 
 - **Astro 5** — framework base (SSG + islands)
 - **React 18** — toda la UI interactiva vive en una isla (`client:only`)
 - **Three.js** — sistema orbital 3D del hero
+- **lucide-react** — íconos de UI (flechas, cerrar, navegación, etc.)
+- **react-icons** (`fa6`) — logos de marca (GitHub, LinkedIn…)
 - **CSS** plano (`src/styles/global.css`) con custom properties
 
 ## Ejecutar en local
@@ -27,6 +29,12 @@ npm run preview  # sirve el build
 ```
 portafolio/
 ├── astro.config.mjs
+├── public/
+│   └── images/
+│       ├── about/                  # foto de "Sobre mí"
+│       └── projects/<cat>/<id>/    # una carpeta por proyecto
+│           ├── cover.webp          # imagen de la card
+│           └── 1.webp, 2.webp, 3.webp   # galería del modal
 ├── src/
 │   ├── pages/
 │   │   └── index.astro          # Página única; monta la isla React
@@ -35,8 +43,8 @@ portafolio/
 │   ├── data/
 │   │   ├── site.js              # Config: status, logo, fuente, cursor
 │   │   ├── i18n.js              # Textos ES/EN
-│   │   ├── skills.js            # Constelación (estrellas + conexiones)
-│   │   ├── projects.js          # Proyectos
+│   │   ├── skills.js            # Constelación: estrellas, conexiones, contador y TECH_LABELS
+│   │   ├── projects.js          # Proyectos (ver convenciones en su cabecera)
 │   │   ├── experience.js        # Timeline de experiencia
 │   │   └── planets.js           # Planetas del hero 3D
 │   └── components/
@@ -48,26 +56,36 @@ portafolio/
 │       └── ContactFooter.jsx    # Contacto y footer
 └── docs/
     ├── portafolio-diseno-v2.md                  # Documento de diseño original
-    ├── iteracion-v1.0.0-portfolio-alex-dev.md   # Cambios de la iteración v1.0.0
-    └── iteracion-v1.1.0-portfolio-alex-dev.md   # Cambios de la iteración v1.1.0
+    ├── iteracion-v1.0.0-portfolio-alex-dev.md   # Plan de la iteración v1.0.0
+    └── iteracion-v1.1.0-portfolio-alex-dev.md   # Plan de la iteración v1.1.0
 ```
+
+## Convenciones de datos
+
+**Proyectos** (`src/data/projects.js` — detalle completo en la cabecera del archivo):
+- `cats` — categorías del proyecto (define en qué filtros aparece). `catLabels` permite mostrar una etiqueta más específica en el badge (ej. `VR`/`AR`) sin cambiar los filtros.
+- `tech` — lista completa de ids de tecnología; alimenta la **constelación** y el **Stack técnico del modal**. `techLabels` es el subset curado que se muestra en la **card**.
+- `image` + `gallery` — rutas dentro de `public/images/projects/<cat>/<id>/`. Si un archivo no existe, cae a un placeholder automáticamente.
+- `live` — URL pública (botón "Visitar"). `github` — URL del repo (botón "Ver código", solo en el modal); `null` lo oculta.
+- `wip: true` — proyecto en proceso: la card marca "En proceso" y el modal oculta galería/resultados con un aviso "Más detalles próximamente".
+
+**Constelación** (`src/data/skills.js`): cada estrella es una tecnología. El contador de proyectos por estrella es **automático** (cuenta los `tech` de los proyectos). `TECH_LABELS` (id→nombre) resuelve los nombres del stack del modal.
 
 ## Pendientes (puntos abiertos)
 
-- **Integración con Supabase:** definir alcance (¿formulario de contacto?, ¿panel privado?, ¿gestión de proyectos?). Aún por discutir. El indicador de status del header se controla por ahora en `src/data/site.js`.
-- **Funcionamiento del formulario:** definir backend (posiblemente Supabase, o servicio tipo Formspree / Resend). Hoy simula el envío.
+- **Integración con Supabase:** definir alcance (¿formulario de contacto?, ¿panel privado?, ¿gestión de proyectos?). El indicador de status del header se controla por ahora en `src/data/site.js`.
+- **Funcionamiento del formulario:** definir backend (Supabase, o servicio tipo Formspree / Resend). Hoy simula el envío.
 - **Enlaces de contacto:** completar los links reales (email, GitHub, LinkedIn, CV).
-- **Sección de habilidades de diseño:** subsección con enlace a Behance, por definir ubicación dentro de la página.
-- **Repositorios / código fuente de cada proyecto:** falta pasar los enlaces para conectarlos con el botón "Ver código" del modal de detalle (campo `github` en `src/data/projects.js`; el botón se muestra solo cuando hay URL).
-- **Detalle expandido por proyecto:** vista ampliada con descripción larga, stack completo (incluyendo tecnologías implícitas como VS Code/Git), capturas y enlaces (incluido "Ver código"). El modal ya omite los bloques sin contenido (`challenge`, `solution`, `gallery`, `result` en `projects.js`).
-- **Constelación de stack:** revisar qué tecnologías desactivar/ocultar mientras no estén respaldadas por un proyecto. No eliminarlas del código (flag `enabled` en `src/data/skills.js`).
-- **Filtros secundarios de la constelación:** confirmar el ícono temporal del botón que despliega `Backend / Diseño / Herramientas` (hoy `✦`).
-- **Iconografía SVG:** la página tiene pocos íconos. Definir un set ilustrativo (SVGs propios o una librería tipo Lucide / Tabler / Phosphor) que encaje con la estética espacial.
-- **Recuento final de tecnologías dominadas:** actualizar la métrica del "Sobre Mí" cuando la página esté terminada y el stack cerrado.
-- **Sección de experiencia:** ampliar con futuras entradas posteriores a 2025.
-- **Apartado de marcas / colaboraciones:** sección de mención especial a marcas y emprendimientos independientes con participación activa. Pendiente a futuro, cuando esas marcas estén más establecidas.
-- **Logo definitivo:** reemplazar provisional `[AE]` cuando esté listo el branding final.
-- **Imágenes:** capturas reales de proyectos y foto/avatar de "Sobre mí" (hoy placeholders rayados).
+- **Migración a Astro 6:** hay un aviso de seguridad *moderate* (XSS en `define:vars`, server islands) que se corrige subiendo a Astro 6 — un *breaking change*. Hacerlo como tarea dedicada **antes de publicar**, no mezclado con contenido. (Riesgo real bajo para un sitio estático sin input no confiable.)
+- **Repos "Ver código":** el botón ya está cableado (campo `github`). Falta poner URLs puntualmente, solo en repos que **no comprometan nada** (sin secretos, sin facilitar trampas, sin dañar productos vivos de cliente).
+- **Contenido de proyectos:** revisar y reemplazar los textos marcados `[provisional]` en `projects.js`, y subir las imágenes (`cover`/galería) que aún faltan.
+- **Sección de habilidades de diseño:** subsección con enlace a Behance, por definir ubicación.
+- **Constelación de stack:** revisar qué tecnologías mantener en `enabled: false` mientras no tengan un proyecto que las respalde.
+- **Recuento final de tecnologías dominadas:** actualizar la métrica del "Sobre Mí" cuando el stack esté cerrado.
+- **Sección de experiencia:** ampliar con entradas posteriores a 2025.
+- **Apartado de marcas / colaboraciones:** mención a marcas y emprendimientos con participación activa. A futuro, cuando estén más establecidas.
+- **Logo definitivo:** reemplazar el provisional `[AE]` cuando esté listo el branding.
+- **Space DEV:** proyecto oculto temporalmente en `projects.js` (rebranding en camino); reactivar tras el rediseño.
 
 ## Autor
 

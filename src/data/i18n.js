@@ -31,7 +31,7 @@ export const I18N = {
       photoPh: '[ foto profesional / avatar ]',
       stats: [
         { value: 15, suffix: '+', label: 'Proyectos completados' },
-        { value: 15, suffix: '+', label: 'Tecnologías dominadas' },
+        { value: 25, suffix: '+', label: 'Tecnologías dominadas' },
         { value: 5, suffix: '', label: 'Años de experiencia' },
         { value: 4, suffix: '', label: 'Áreas de especialización' }
       ]
@@ -66,6 +66,8 @@ export const I18N = {
       stack: 'Stack técnico',
       gallery: 'Galería',
       result: 'Resultado',
+      role: 'Rol',
+      comingSoon: 'Más detalles próximamente',
       live: 'Visitar',
       github: 'Ver código en GitHub',
       close: 'Cerrar',
@@ -117,7 +119,7 @@ export const I18N = {
       social: 'Redes',
       copyright: '© 2026 — Todos los derechos reservados a Alex DEV',
       builtWith: 'Construido con Astro, React y mucho café',
-      version: 'v1.1.0'
+      version: 'v1.0.0'
     },
     boot: [
       'Inicializando sistema...',
@@ -156,7 +158,7 @@ export const I18N = {
       photoPh: '[ professional photo / avatar ]',
       stats: [
         { value: 15, suffix: '+', label: 'Projects completed' },
-        { value: 15, suffix: '+', label: 'Technologies mastered' },
+        { value: 25, suffix: '+', label: 'Technologies mastered' },
         { value: 5, suffix: '', label: 'Years of experience' },
         { value: 4, suffix: '', label: 'Areas of expertise' }
       ]
@@ -191,6 +193,8 @@ export const I18N = {
       stack: 'Tech stack',
       gallery: 'Gallery',
       result: 'Outcome',
+      role: 'Role',
+      comingSoon: 'More details coming soon',
       live: 'Visit',
       github: 'View code on GitHub',
       close: 'Close',

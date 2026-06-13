@@ -11,6 +11,7 @@
 import React from 'react';
 import { I18N } from '../data/i18n.js';
 import { PROJECTS } from '../data/projects.js';
+import { TECH_LABELS } from '../data/skills.js';
 import { EXPERIENCE } from '../data/experience.js';
 import { useReveal, Bold } from './Ui.jsx';
 import { Constellation } from './Constellation.jsx';
@@ -102,7 +103,9 @@ export function ProjectCard({ project, lang, index, onOpen }) {
     >
       <div className="project-img">
         <div className="badge-cat-row">
-          {project.cats.map((cat) => <span className="badge-cat" key={cat}>{t.filters[cat]}</span>)}
+          {project.cats.map((cat) => (
+            <span className="badge-cat" key={cat}>{(project.catLabels && project.catLabels[cat]) || t.filters[cat]}</span>
+          ))}
         </div>
         {project.image && !imgError ? (
           <img
@@ -128,8 +131,12 @@ export function ProjectCard({ project, lang, index, onOpen }) {
           <button className="project-link" onClick={(e) => { e.stopPropagation(); onOpen(project.id); }}>
             {t.projects.details} <ArrowRight size={15} aria-hidden="true" />
           </button>
-          {/* "Ver código" vive ahora dentro del modal de detalle */}
-          {project.live ? (
+          {/* "En proceso" lo dicta SOLO el flag wip (no la ausencia de link).
+              "Visitar" depende de live; sin live simplemente no hay botón.
+              "Ver código" vive dentro del modal de detalle. */}
+          {project.wip ? (
+            <span className="project-status"><Clock size={13} aria-hidden="true" /> {t.projects.inProgress}</span>
+          ) : project.live ? (
             <a
               className="project-link"
               href={project.live}
@@ -140,9 +147,7 @@ export function ProjectCard({ project, lang, index, onOpen }) {
             >
               {t.projects.visit} <ExternalLink size={14} aria-hidden="true" />
             </a>
-          ) : (
-            <span className="project-status"><Clock size={13} aria-hidden="true" /> {t.projects.inProgress}</span>
-          )}
+          ) : null}
         </div>
       </div>
     </article>
@@ -213,12 +218,28 @@ export function ProjectsSection({ lang, filter, setFilter, techFilter, clearTech
   );
 }
 
+/* Imagen de galería con fallback individual al placeholder.
+   Se keyea por src en el render para remontar al cambiar de proyecto
+   (así el estado de error no queda obsoleto al navegar entre modales). */
+function GalleryImg({ src, alt }) {
+  const [err, setErr] = React.useState(false);
+  if (err) return <div className="img-placeholder"><span className="ph-label">[ {alt} ]</span></div>;
+  return <img className="cs-gallery-img" src={src} alt={alt} loading="lazy" onError={() => setErr(true)} />;
+}
+
+/* Imagen principal (hero) del modal con fallback al placeholder.
+   Se keyea por proyecto para reiniciar el estado de error al navegar. */
+function HeroImg({ src, alt, placeholder }) {
+  const [err, setErr] = React.useState(false);
+  if (!src || err) return <div className="modal-hero img-placeholder"><span className="ph-label">{placeholder}</span></div>;
+  return <img className="modal-hero-img" src={src} alt={alt} onError={() => setErr(true)} />;
+}
+
 /* ---------- Modal case study ---------- */
 export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
   const t = I18N[lang].modal;
   const closeRef = React.useRef(null);
   const project = PROJECTS.find((p) => p.id === projectId);
-  const [imgError, setImgError] = React.useState(false);
 
   React.useEffect(() => {
     if (!project) return;
@@ -242,7 +263,7 @@ export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
 
   if (!project) return null;
   const c = project[lang];
-  const catName = project.cats.map((cat) => I18N[lang].filters[cat]).join(' · ');
+  const catName = project.cats.map((cat) => (project.catLabels && project.catLabels[cat]) || I18N[lang].filters[cat]).join(' · ');
 
   return (
     <div className="modal-overlay" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
@@ -252,23 +273,24 @@ export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
           <div style={{ flex: 1, minWidth: 0 }}>
             <h3 className="modal-title">{c.title}</h3>
             <span className="modal-meta">{catName}{project.year ? ' · ' + project.year : ''}</span>
+            {(c.role || c.context) && (
+              <span className="modal-sub">
+                {c.role && (<span><span className="modal-sub-key">{t.role}:</span> {c.role}</span>)}
+                {c.role && c.context && <span className="modal-sub-dot"> · </span>}
+                {c.context && <span>{c.context}</span>}
+              </span>
+            )}
           </div>
           <button className="modal-nav-btn" onClick={() => onNavigate(1)} aria-label={t.next}><ChevronRight size={20} aria-hidden="true" /></button>
           <button className="modal-close" ref={closeRef} onClick={onClose} aria-label={t.close}><X size={20} aria-hidden="true" /></button>
         </div>
         <div className="modal-content">
-          {project.image && !imgError ? (
-            <img
-              className="modal-hero-img"
-              src={project.image}
-              alt={c.title}
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div className="modal-hero img-placeholder">
-              <span className="ph-label">[ imagen principal — {c.title} ]</span>
-            </div>
-          )}
+          <HeroImg
+            key={project.id}
+            src={project.image}
+            alt={c.title}
+            placeholder={'[ imagen principal — ' + c.title + ' ]'}
+          />
           {c.summary && (
             <div className="cs-block">
               <h4>{t.summary}</h4>
@@ -290,24 +312,34 @@ export function CaseStudyModal({ lang, projectId, onClose, onNavigate }) {
           <div className="cs-block">
             <h4>{t.stack}</h4>
             <div className="project-tech">
-              {project.techLabels.map((tech) => <span className="badge-mono" key={tech}>{tech}</span>)}
+              {project.tech.map((id) => <span className="badge-mono" key={id}>{TECH_LABELS[id] || id}</span>)}
             </div>
           </div>
-          {c.gallery && (
+          {project.wip ? (
             <div className="cs-block">
-              <h4>{t.gallery}</h4>
-              <div className="cs-gallery">
-                {c.gallery.map((g, i) => (
-                  <div className="img-placeholder" key={i}><span className="ph-label">{g}</span></div>
-                ))}
-              </div>
+              <div className="cs-soon">{t.comingSoon}</div>
             </div>
-          )}
-          {c.result && (
-            <div className="cs-block">
-              <h4>{t.result}</h4>
-              <p>{c.result}</p>
-            </div>
+          ) : (
+            <React.Fragment>
+              {project.gallery && project.gallery.length > 0 && (
+                <div className="cs-block">
+                  <h4>{t.gallery}</h4>
+                  <div className="cs-gallery">
+                    {project.gallery.map((g, i) => (
+                      <GalleryImg key={g} src={g} alt={c.title + ' — ' + (i + 1)} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {c.result && (
+                <div className="cs-block">
+                  <h4>{t.result}</h4>
+                  {Array.isArray(c.result)
+                    ? (<ul className="cs-result-list">{c.result.map((r, i) => <li key={i}>{r}</li>)}</ul>)
+                    : (<p>{c.result}</p>)}
+                </div>
+              )}
+            </React.Fragment>
           )}
           {(project.live || project.github) && (
             <div className="modal-footer-links">
