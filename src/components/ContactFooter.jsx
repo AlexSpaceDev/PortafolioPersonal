@@ -1,6 +1,6 @@
 /* ============================================================
    Contacto + Footer
-   v1.0.0: firma "Alex DEV", copyright actualizado, versión 1.0.0.
+   v1.0.0: firma "Alex D.E.V.", copyright actualizado, versión 1.0.0.
    Formulario conectado a Web3Forms (PUBLIC_WEB3FORMS_KEY en .env).
    ============================================================ */
 
@@ -11,6 +11,7 @@ import { Mail, Download, Check } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa6';
 
 export const CONTACT_EMAIL = 'alexenriquezvera@gmail.com';
+export const GITHUB_URL = 'https://github.com/AlexD-E-V';
 
 export function ContactSection({ lang }) {
   const t = I18N[lang].contact;
@@ -53,7 +54,7 @@ export function ContactSection({ lang }) {
         body: JSON.stringify({
           access_key: WEB3FORMS_KEY,
           subject: `Nuevo mensaje del portafolio — ${fields.name}`,
-          from_name: 'Portafolio Alex DEV',
+          from_name: 'Portafolio Alex D.E.V.',
           name: fields.name,
           email: fields.email,
           [f.type]: fields.type || '—',
@@ -107,7 +108,7 @@ export function ContactSection({ lang }) {
             <a className="contact-method" href="#" onClick={copyEmail}>
               <span className="m-icon"><Mail size={16} aria-hidden="true" /></span>{copied ? t.emailCopied : t.email}
             </a>
-            <a className="contact-method" href="#" onClick={(e) => e.preventDefault()}>
+            <a className="contact-method" href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
               <span className="m-icon"><FaGithub size={16} aria-hidden="true" /></span>GitHub
             </a>
             <a className="contact-method" href="#" onClick={(e) => e.preventDefault()}>
@@ -186,7 +187,7 @@ export function Footer({ lang }) {
     <footer className="site-footer">
       <div className="footer-inner">
         <div>
-          <p className="footer-name">Alex DEV</p>
+          <p className="footer-name">Alex D.E.V.</p>
           <p className="footer-sub">{t.footer.tagline}</p>
           <p className="footer-copy">{t.footer.copyright}</p>
         </div>
@@ -201,7 +202,7 @@ export function Footer({ lang }) {
         <div className="footer-col">
           <h5>{t.footer.social}</h5>
           <div className="footer-social">
-            <a href="#" onClick={(e) => e.preventDefault()} aria-label="GitHub"><FaGithub size={17} aria-hidden="true" /></a>
+            <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" aria-label="GitHub"><FaGithub size={17} aria-hidden="true" /></a>
             <a href="#" onClick={(e) => e.preventDefault()} aria-label="LinkedIn"><FaLinkedin size={17} aria-hidden="true" /></a>
             <a href={'mailto:' + CONTACT_EMAIL} aria-label="Email"><Mail size={17} aria-hidden="true" /></a>
           </div>

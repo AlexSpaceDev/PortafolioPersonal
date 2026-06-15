@@ -197,7 +197,7 @@ export function Header({ lang, setLang, status, activeSection, logoStyle }) {
         <a className="logo" href="#inicio" onClick={(e) => { e.preventDefault(); goTo('inicio'); }} aria-label="Inicio">
           {logoStyle === 'ae'
             ? (<span><span className="logo-bracket">[</span>AE<span className="logo-bracket">]</span></span>)
-            : (<span>Alex<span className="logo-bracket">_</span>DEV</span>)}
+            : (<span>Alex<span className="logo-bracket">_</span>D.E.V.</span>)}
         </a>
         <nav className="nav-desktop" aria-label="Navegación principal">{navLinks()}</nav>
         <div className="lang-toggle" role="group" aria-label="Idioma">

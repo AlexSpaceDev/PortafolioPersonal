@@ -1,5 +1,5 @@
 /* ============================================================
-   Datos + i18n ES/EN — Portafolio ALEX DEV
+   Datos + i18n ES/EN — Portafolio ALEX D.E.V.
    Iteración v1.0.0 (ver docs/iteracion-v1.0.0-portfolio-alex-dev.md)
    ============================================================ */
 
@@ -17,7 +17,7 @@ export const I18N = {
       closed: 'No tomando proyectos por ahora'
     },
     hero: {
-      title: 'ALEX DEV',
+      title: 'ALEX D.E.V.',
       subtitle: 'Full Stack Developer',
       desc: 'Diseño y construyo aplicaciones, sitios web y videojuegos donde la lógica del código se cruza con la curiosidad por explorar nuevas formas de crear.',
       ctaPrimary: 'Ver proyectos',
@@ -25,8 +25,8 @@ export const I18N = {
     },
     about: {
       label: '// 01 SOBRE MÍ',
-      title: 'Soy Alex DEV',
-      p1: '¿Qué tal? Soy **Alex Enriquez D. Vera (DEV)**, desarrollador full-stack multidisciplinario: aplicaciones web, móviles, videojuegos y consultoría técnica. Me muevo entre stacks entendiendo primero el problema, para luego elegir la herramienta más adecuada en cada caso.',
+      title: 'Soy Alex D.E.V.',
+      p1: '¿Qué tal? Soy **Alex D. Enriquez Vera (D.E.V.)**, desarrollador full-stack multidisciplinario: aplicaciones web, móviles, videojuegos y consultoría técnica. Me muevo entre stacks entendiendo primero el problema, para luego elegir la herramienta más adecuada en cada caso.',
       p2: 'Prefiero proyectos donde el detalle importa: productos con identidad, experiencias interactivas y herramientas que la gente realmente usa. Trabajo de forma independiente, con comunicación directa y entregas visibles.',
       photoPh: '[ foto profesional / avatar ]',
       stats: [
@@ -118,7 +118,7 @@ export const I18N = {
       tagline: 'Software Developer • Game Developer • Creative Technologist',
       quickLinks: 'Secciones',
       social: 'Redes',
-      copyright: '© 2026 — Todos los derechos reservados a Alex DEV',
+      copyright: '© 2026 — Todos los derechos reservados a Alex D.E.V.',
       builtWith: 'Construido con Astro, React y mucho café',
       version: 'v1.0.0'
     },
@@ -145,7 +145,7 @@ export const I18N = {
       closed: 'Not taking projects right now'
     },
     hero: {
-      title: 'ALEX DEV',
+      title: 'ALEX D.E.V.',
       subtitle: 'Full Stack Developer',
       desc: 'I design and build applications, websites and games where the logic of code meets the curiosity to explore new ways of creating.',
       ctaPrimary: 'View projects',
@@ -153,8 +153,8 @@ export const I18N = {
     },
     about: {
       label: '// 01 ABOUT ME',
-      title: "I'm Alex DEV",
-      p1: "Hi! I'm **Alex Enriquez D. Vera (DEV)**, a multidisciplinary full-stack developer: web and mobile applications, games and technical consulting. I move between stacks by understanding the problem first, then choosing the most suitable tool for each case.",
+      title: "I'm Alex D.E.V.",
+      p1: "Hi! I'm **Alex D. Enriquez Vera (D.E.V.)**, a multidisciplinary full-stack developer: web and mobile applications, games and technical consulting. I move between stacks by understanding the problem first, then choosing the most suitable tool for each case.",
       p2: 'I prefer projects where detail matters: products with identity, interactive experiences and tools people actually use. I work independently, with direct communication and visible progress.',
       photoPh: '[ professional photo / avatar ]',
       stats: [
@@ -246,7 +246,7 @@ export const I18N = {
       tagline: 'Software Developer • Game Developer • Creative Technologist',
       quickLinks: 'Sections',
       social: 'Social',
-      copyright: '© 2026 — All rights reserved to Alex DEV',
+      copyright: '© 2026 — All rights reserved to Alex D.E.V.',
       builtWith: 'Built with Astro, React and a lot of coffee',
       version: 'v1.1.0'
     },

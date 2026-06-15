@@ -297,7 +297,7 @@ export const PROJECTS = [
     tech: ['unity', 'csharp', 'vuforia', 'vscode', 'git', 'github'],
     techLabels: ['Unity', 'C#', 'Vuforia'],
     live: null,
-    github: 'https://github.com/AlexSpaceDev/ArAlfareriayMetalurgia',
+    github: 'https://github.com/AlexD-E-V/ArAlfareriayMetalurgia',
     year: 2026,
     gallery: [
       '/images/projects/games/alfareria-metalurgia-ar/1.webp',
