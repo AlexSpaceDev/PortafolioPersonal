@@ -139,7 +139,7 @@ export default function App() {
       <StaticStarfield />
       <BootSequence lang={lang} onDone={() => {}} />
       <CustomCursor enabled={SITE.customCursor} />
-      <Header lang={lang} setLang={setLang} status={SITE.status} activeSection={activeSection} logoStyle={SITE.logoStyle} />
+      <Header lang={lang} setLang={setLang} status={SITE.status} activeSection={activeSection} />
       <main id="main">
         <Hero lang={lang} status={SITE.status} onPlanetClick={onPlanetClick} reducedMotion={reducedMotion} />
         <About lang={lang} />

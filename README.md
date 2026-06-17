@@ -1,6 +1,6 @@
-# Portafolio Personal — ALEX DEV
+# Portafolio Personal — Alex D.E.V.
 
-Portafolio personal de **Alex DEV (SPACE DEV)**: Full Stack Developer.
+Portafolio personal de **Alex D.E.V.**: Full Stack Developer.
 
 Sitio de una sola página con un concepto visual **"Cosmos + Código"**: hero 3D orbital como fondo ambiental, constelaciones de stack interactivas (con navegación por arrastre), proyectos filtrables con modal de detalle, y soporte bilingüe (ES/EN).
 
@@ -13,6 +13,7 @@ Sitio de una sola página con un concepto visual **"Cosmos + Código"**: hero 3D
 - **Three.js** — sistema orbital 3D del hero
 - **lucide-react** — íconos de UI (flechas, cerrar, navegación, etc.)
 - **react-icons** (`fa6`) — logos de marca (GitHub, LinkedIn…)
+- **Web3Forms** — backend del formulario de contacto (clave en `PUBLIC_WEB3FORMS_KEY`)
 - **CSS** plano (`src/styles/global.css`) con custom properties
 
 ## Ejecutar en local
@@ -30,6 +31,9 @@ npm run preview  # sirve el build
 portafolio/
 ├── astro.config.mjs
 ├── public/
+│   ├── brand/                      # logos, favicon, apple-touch, og-image
+│   ├── cv/                         # CV-Alex-DEV-ES.pdf / -EN.pdf
+│   ├── robots.txt
 │   └── images/
 │       ├── about/                  # foto de "Sobre mí"
 │       └── projects/<cat>/<id>/    # una carpeta por proyecto
@@ -37,7 +41,8 @@ portafolio/
 │           └── 1.webp, 2.webp, 3.webp   # galería del modal
 ├── src/
 │   ├── pages/
-│   │   └── index.astro          # Página única; monta la isla React
+│   │   ├── index.astro          # Página única; monta la isla React
+│   │   └── 404.astro            # Página de error (temática cosmos)
 │   ├── styles/
 │   │   └── global.css           # Estilos globales (paleta cosmos)
 │   ├── data/
@@ -71,21 +76,38 @@ portafolio/
 
 **Constelación** (`src/data/skills.js`): cada estrella es una tecnología. El contador de proyectos por estrella es **automático** (cuenta los `tech` de los proyectos). `TECH_LABELS` (id→nombre) resuelve los nombres del stack del modal.
 
+## Despliegue (Vercel)
+
+El sitio es **estático (SSG)**; Vercel detecta Astro automáticamente (build `astro build`, output `dist/`). No requiere adaptador. Antes del primer deploy:
+
+- **Variable de entorno:** añadir `PUBLIC_WEB3FORMS_KEY` en *Project Settings → Environment Variables* (está en `.env` local, que no se sube). Sin ella, el formulario de contacto falla en producción.
+- **Dominio en `index.astro`:** poner el dominio final en `SITE_URL` para que `og:image` / `og:url` sean **absolutas** (requerido para los previews de WhatsApp, LinkedIn, Telegram, etc.).
+- **Dominio en `astro.config.mjs`:** fijar `site: '<dominio>'` para URLs canónicas y sitemap.
+- **`robots.txt`:** descomentar y completar la línea `Sitemap:` con la URL real (y, si se quiere, añadir `@astrojs/sitemap`).
+
 ## Pendientes (puntos abiertos)
 
-- **Integración con Supabase:** definir alcance (¿formulario de contacto?, ¿panel privado?, ¿gestión de proyectos?). El indicador de status del header se controla por ahora en `src/data/site.js`.
-- **Funcionamiento del formulario:** definir backend (Supabase, o servicio tipo Formspree / Resend). Hoy simula el envío.
-- **Enlaces de contacto:** completar los links reales (email, GitHub, LinkedIn, CV).
-- **Migración a Astro 6:** hay un aviso de seguridad *moderate* (XSS en `define:vars`, server islands) que se corrige subiendo a Astro 6 — un *breaking change*. Hacerlo como tarea dedicada **antes de publicar**, no mezclado con contenido. (Riesgo real bajo para un sitio estático sin input no confiable.)
+**Consistencia (antes de publicar):**
+- **`<title>`:** sigue en mayúsculas `ALEX D.E.V.` en `index.astro`; alinear con la marca `Alex D.E.V.`.
+- **Limpieza de `src/data/site.js`:** `logoStyle` ya no se usa (el header siempre renderiza la imagen del logo) y el comentario de Supabase quedó obsoleto.
+
+**Contenido / futuro:**
+- **Migración a Astro 6:** aviso de seguridad *moderate* (XSS en `define:vars`, server islands), *breaking change*. Tarea dedicada; riesgo real bajo para un sitio estático sin input no confiable.
+- **Optimización de carga:** `App.jsx` pesa ~557 kB (Three.js); evaluar lazy-load del `Hero3D` para mejorar el first-load.
 - **Repos "Ver código":** el botón ya está cableado (campo `github`). Falta poner URLs puntualmente, solo en repos que **no comprometan nada** (sin secretos, sin facilitar trampas, sin dañar productos vivos de cliente).
 - **Contenido de proyectos:** revisar y reemplazar los textos marcados `[provisional]` en `projects.js`, y subir las imágenes (`cover`/galería) que aún faltan.
-- **Sección de habilidades de diseño:** subsección con enlace a Behance, por definir ubicación.
 - **Constelación de stack:** revisar qué tecnologías mantener en `enabled: false` mientras no tengan un proyecto que las respalde.
 - **Recuento final de tecnologías dominadas:** actualizar la métrica del "Sobre Mí" cuando el stack esté cerrado.
 - **Sección de experiencia:** ampliar con entradas posteriores a 2025.
 - **Apartado de marcas / colaboraciones:** mención a marcas y emprendimientos con participación activa. A futuro, cuando estén más establecidas.
-- **Logo definitivo:** reemplazar el provisional `[AE]` cuando esté listo el branding.
-- **Space DEV:** proyecto oculto temporalmente en `projects.js` (rebranding en camino); reactivar tras el rediseño.
+
+**Hecho / descartado:**
+- ~~Integración con Supabase~~ — descartado; el status del header se controla en `src/data/site.js`, suficiente.
+- ~~Formulario de contacto~~ — hecho con Web3Forms.
+- ~~Enlaces de contacto (email, GitHub, LinkedIn, CV)~~ — hechos.
+- ~~Logo definitivo~~ — hecho; assets de marca en `public/brand/`.
+- ~~Sección de habilidades de diseño / Behance~~ — hecho.
+- ~~Space DEV oculto~~ — reactivado en `projects.js`.
 
 ## Autor
 

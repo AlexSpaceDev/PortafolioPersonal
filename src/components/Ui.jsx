@@ -169,7 +169,7 @@ export function StatusPill({ lang, status }) {
 /* ---------- Header ---------- */
 export const NAV_IDS = ['inicio', 'sobre', 'habilidades', 'proyectos', 'experiencia', 'proceso', 'contacto'];
 
-export function Header({ lang, setLang, status, activeSection, logoStyle }) {
+export function Header({ lang, setLang, status, activeSection }) {
   const [scrolled, setScrolled] = React.useState(false);
   const [menuOpen, setMenuOpen] = React.useState(false);
   const t = I18N[lang];
