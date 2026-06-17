@@ -67,12 +67,20 @@ export function Constellation({ lang, filter, onStarClick, reducedMotion }) {
       A.pan = clampPan(A.pan);
     }
     resize();
+    // Pan inicial centrado en el espacio virtual (solo la primera vez:
+    // no re-centrar en cada resize ni pisar el arrastre del usuario al
+    // cambiar de filtro/idioma). Aplica igual en móvil y desktop.
+    if (!A.panInit) { A.pan = clampPan(maxPan() / 2); A.panInit = true; }
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
 
     const pad = { x: 70, y: 56 };
+    // En móvil la nube de estrellas deja aire de sobra arriba y queda
+    // pegada al hint de abajo: la subimos un poco aprovechando ese espacio
+    // (el recuadro pasa a 420px de alto bajo el breakpoint de 768).
+    const yShift = () => (W < 768 ? 34 : 0);
     const px = (s) => pad.x + s.x * (virtW() - pad.x * 2) - A.pan;
-    const py = (s) => pad.y + s.y * (H - pad.y * 2);
+    const py = (s) => pad.y + s.y * (H - pad.y * 2) - yShift();
 
     function starAt(mx, my) {
       let best = null, bestD = 28;

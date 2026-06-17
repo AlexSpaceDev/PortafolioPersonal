@@ -192,26 +192,31 @@ export function Header({ lang, setLang, status, activeSection, logoStyle }) {
   ));
 
   return (
-    <header className={'site-header' + (scrolled ? ' scrolled' : '')}>
-      <div className="header-inner">
-        <a className="logo" href="#inicio" onClick={(e) => { e.preventDefault(); goTo('inicio'); }} aria-label="Inicio">
-          {logoStyle === 'ae'
-            ? (<span><span className="logo-bracket">[</span>AE<span className="logo-bracket">]</span></span>)
-            : (<span>Alex<span className="logo-bracket">_</span>D.E.V.</span>)}
-        </a>
-        <nav className="nav-desktop" aria-label="Navegación principal">{navLinks()}</nav>
-        <div className="lang-toggle" role="group" aria-label="Idioma">
-          <button className={lang === 'es' ? 'active' : ''} onClick={() => setLang('es')}>ES</button>
-          <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
+    <React.Fragment>
+      <header className={'site-header' + (scrolled ? ' scrolled' : '')}>
+        <div className="header-inner">
+          <a className="logo" href="#inicio" onClick={(e) => { e.preventDefault(); goTo('inicio'); }} aria-label="Inicio">
+            {logoStyle === 'ae'
+              ? (<span><span className="logo-bracket">[</span>AE<span className="logo-bracket">]</span></span>)
+              : (<span>Alex<span className="logo-bracket">_</span>D.E.V.</span>)}
+          </a>
+          <nav className="nav-desktop" aria-label="Navegación principal">{navLinks()}</nav>
+          <div className="lang-toggle" role="group" aria-label="Idioma">
+            <button className={lang === 'es' ? 'active' : ''} onClick={() => setLang('es')}>ES</button>
+            <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
+          </div>
+          <StatusPill lang={lang} status={status} />
+          <button
+            className="hamburger"
+            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(!menuOpen)}
+          ><span></span><span></span><span></span></button>
         </div>
-        <StatusPill lang={lang} status={status} />
-        <button
-          className="hamburger"
-          aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
-        ><span></span><span></span><span></span></button>
-      </div>
+      </header>
+      {/* Fuera del <header>: el header con .scrolled aplica backdrop-filter,
+          que convertiría al header en el bloque contenedor de este menú fixed
+          y lo confinaría a su caja (quedaría pegado arriba al scrollear). */}
       <div className={'mobile-menu' + (menuOpen ? ' open' : '')}>
         {navLinks()}
         <div className="lang-toggle" style={{ marginTop: 18 }}>
@@ -219,7 +224,7 @@ export function Header({ lang, setLang, status, activeSection, logoStyle }) {
           <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
         </div>
       </div>
-    </header>
+    </React.Fragment>
   );
 }
 
