@@ -51,20 +51,21 @@ export function BrandName({ text }) {
 
 /* ---------- Boot sequence (primera visita) ---------- */
 export function BootSequence({ lang, onDone }) {
-  const [visible, setVisible] = React.useState(false);
+  // visible se decide SÍNCRONAMENTE en el primer render (no en un effect):
+  // así el overlay opaco cubre la página desde el primer frame. Si se
+  // resolvía en un useEffect, en dispositivos lentos se alcanzaba a ver el
+  // hero/header un instante antes de que apareciera la animación de entrada.
+  const [visible, setVisible] = React.useState(() => {
+    if (typeof window === 'undefined') return false;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+    return !localStorage.getItem('ae_boot_seen');
+  });
   const [lineCount, setLineCount] = React.useState(0);
   const [fading, setFading] = React.useState(false);
   const lines = I18N[lang].boot;
-  const rm = useReducedMotion();
 
   React.useEffect(() => {
-    if (rm) return;
-    const seen = localStorage.getItem('ae_boot_seen');
-    if (seen) return;
-    setVisible(true);
-    setFading(false);
-    setLineCount(0);
-    localStorage.setItem('ae_boot_seen', '1');
+    if (visible) localStorage.setItem('ae_boot_seen', '1');
   }, []);
 
   React.useEffect(() => {

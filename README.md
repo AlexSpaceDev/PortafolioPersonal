@@ -78,22 +78,25 @@ portafolio/
 
 ## Despliegue (Vercel)
 
-El sitio es **estático (SSG)**; Vercel detecta Astro automáticamente (build `astro build`, output `dist/`). No requiere adaptador. Antes del primer deploy:
+Publicado en **https://alex-d-e-v.vercel.app** (deploy automático en cada push a `main`).
 
-- **Variable de entorno:** añadir `PUBLIC_WEB3FORMS_KEY` en *Project Settings → Environment Variables* (está en `.env` local, que no se sube). Sin ella, el formulario de contacto falla en producción.
-- **Dominio en `index.astro`:** poner el dominio final en `SITE_URL` para que `og:image` / `og:url` sean **absolutas** (requerido para los previews de WhatsApp, LinkedIn, Telegram, etc.).
-- **Dominio en `astro.config.mjs`:** fijar `site: '<dominio>'` para URLs canónicas y sitemap.
-- **`robots.txt`:** descomentar y completar la línea `Sitemap:` con la URL real (y, si se quiere, añadir `@astrojs/sitemap`).
+El sitio es **estático (SSG)**; Vercel detecta Astro solo (build `astro build`, output `dist/`, sin adaptador). Configuración ya aplicada:
+
+- **Variable de entorno:** `PUBLIC_WEB3FORMS_KEY` configurada en *Project Settings → Environment Variables* (vive en `.env` local, que no se sube). Sin ella, el formulario falla en producción.
+- **`SITE_URL`** en `index.astro` y **`site`** en `astro.config.mjs` apuntan al dominio → `og:image` / `og:url` absolutas y URLs canónicas.
+- **Sitemap:** `@astrojs/sitemap` genera `sitemap-index.xml` en el build; `robots.txt` ya lo referencia.
+
+> Si en el futuro se migra a **dominio propio**, actualizar el dominio en estos tres sitios: `SITE_URL` (index.astro), `site` (astro.config.mjs) y la línea `Sitemap:` (robots.txt); y volver a registrar la propiedad en Search Console.
 
 ## Pendientes (puntos abiertos)
 
-**Consistencia (antes de publicar):**
-- **`<title>`:** sigue en mayúsculas `ALEX D.E.V.` en `index.astro`; alinear con la marca `Alex D.E.V.`.
-- **Limpieza de `src/data/site.js`:** `logoStyle` ya no se usa (el header siempre renderiza la imagen del logo) y el comentario de Supabase quedó obsoleto.
+**SEO / difusión:**
+- **Google Search Console:** registrar la propiedad `https://alex-d-e-v.vercel.app/` (verificación por meta tag o archivo), enviar el sitemap (`sitemap-index.xml`) y solicitar indexación. Acelera aparecer en Google; opcional para un portafolio de referidos.
+- **Renderizado client-only (limitación conocida):** la UI se monta con `client:only="react"`, así que el HTML servido lleva las metaetiquetas (title/description/OG ✓) pero el `<body>` se rellena por JS — sin `<h1>` ni texto en el HTML crudo. Google renderiza JS y termina indexando, pero crawlers más simples (algunos sociales/Bing) ven poco. Mejorarlo implica pasar a `client:load` con todo el acceso a `window`/`localStorage` guardado para SSR — refactor mayor, baja prioridad para este sitio.
 
-**Contenido / futuro:**
+**Consistencia / técnico:**
 - **Migración a Astro 6:** aviso de seguridad *moderate* (XSS en `define:vars`, server islands), *breaking change*. Tarea dedicada; riesgo real bajo para un sitio estático sin input no confiable.
-- **Optimización de carga:** `App.jsx` pesa ~557 kB (Three.js); evaluar lazy-load del `Hero3D` para mejorar el first-load.
+- **Optimización de carga:** `App.jsx` pesa ~557 kB (Three.js); el cuello de botella vive en el hero (above the fold). Mejora con sentido: no cargar Three.js en móvil / `prefers-reduced-motion` y mostrar un fondo estático. Opcional, medir con Lighthouse antes.
 - **Repos "Ver código":** el botón ya está cableado (campo `github`). Falta poner URLs puntualmente, solo en repos que **no comprometan nada** (sin secretos, sin facilitar trampas, sin dañar productos vivos de cliente).
 - **Contenido de proyectos:** revisar y reemplazar los textos marcados `[provisional]` en `projects.js`, y subir las imágenes (`cover`/galería) que aún faltan.
 - **Constelación de stack:** revisar qué tecnologías mantener en `enabled: false` mientras no tengan un proyecto que las respalde.
@@ -111,4 +114,4 @@ El sitio es **estático (SSG)**; Vercel detecta Astro automáticamente (build `a
 
 ## Autor
 
-**Alex DEV** — SPACE DEV
+**Alex D.E.V.** — Full Stack Developer
