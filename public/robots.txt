@@ -3,5 +3,5 @@
 User-agent: *
 Allow: /
 
-# Al publicar con dominio, descomenta y pon la URL real del sitemap:
-# Sitemap: https://TU-DOMINIO/sitemap.xml
+# Sitemap generado por @astrojs/sitemap en el build.
+Sitemap: https://alex-d-e-v.vercel.app/sitemap-index.xml

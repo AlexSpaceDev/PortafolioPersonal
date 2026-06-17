@@ -2,10 +2,11 @@
 import '../styles/global.css';
 import App from '../components/App.jsx';
 
-// Dominio del sitio. Al publicar, pon aquí la URL (ej. 'https://alexdev.com')
-// y og:url / og:image se vuelven absolutas automáticamente (requerido por
-// algunas plataformas para mostrar el preview).
-const SITE_URL = '';
+// Dominio del sitio (sin barra final). og:url / og:image se vuelven
+// absolutas automáticamente (requerido por algunas plataformas para
+// mostrar el preview). Si cambias a dominio propio, actualízalo aquí
+// y en astro.config.mjs.
+const SITE_URL = 'https://alex-d-e-v.vercel.app';
 const OG_IMAGE = SITE_URL + '/brand/og-image.png';
 const OG_TITLE = 'Alex D.E.V. — Full Stack Developer';
 const OG_DESC =
